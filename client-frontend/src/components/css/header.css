@@ -1,0 +1,68 @@
+.header {
+    display: grid;
+    grid-template-columns: 2fr 4fr 0.25fr 1fr 0.25fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "logo searchBar blank1 login blank2";
+    justify-content: center;
+    align-content: center;
+    background-color: #f8f8f8;
+    padding: 1rem;
+    width: 100vw;
+    height: auto;
+}
+
+#logoImg, .logo a {
+    height: 3rem;
+    width: 3rem;
+    align-self: center;
+    justify-self: center;
+}
+
+#logoTopic {
+    align-self: center;
+    justify-self: center;
+    margin-left: 1rem;
+}
+
+.logo {
+    grid-area: logo;
+    height: auto;
+    width: auto;
+    display: flex;
+    align-self: center;
+    justify-self: center;
+}
+
+.searchBar {
+    grid-area: searchBar;
+    display: flex;
+    align-self: center;
+    justify-self: center;
+    display: flex;
+    height: 100%;
+    width: 80%;
+    justify-content: center;
+    align-content: center;
+}
+
+.searchBtn {
+    text-align: center;
+    height: 60%;
+    width: auto;
+    justify-self: center;
+    align-self: center;
+    margin-left: 1rem;
+    margin-top: 0.5rem;
+}
+
+#outlined-search {
+    padding: auto;
+    justify-self: center;
+    align-self: center;
+}
+
+.loginButton {
+    grid-area: login;
+    justify-self: center;
+    align-self: center;
+}

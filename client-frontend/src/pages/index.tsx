@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom";
+import "./css/index.css";
+import Header from "../components/header";
 
 function Index() {
     return (
         <>
-            <h1>First Page</h1>
-            <Link to="/detail">Go to detail page</Link>
+            <Header />
         </>
     );
 }
