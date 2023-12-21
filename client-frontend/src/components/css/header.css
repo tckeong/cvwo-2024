@@ -9,6 +9,7 @@
     padding: 1rem;
     width: 100vw;
     height: auto;
+    border-bottom: #C5C5C5 solid 1px;
 }
 
 #logoImg, .logo a {
@@ -45,24 +46,19 @@
     align-content: center;
 }
 
-.searchBtn {
-    text-align: center;
-    height: 60%;
-    width: auto;
-    justify-self: center;
-    align-self: center;
-    margin-left: 1rem;
-    margin-top: 0.5rem;
-}
-
 #outlined-search {
     padding: auto;
     justify-self: center;
     align-self: center;
+    flex-grow: 1;
 }
 
 .loginButton {
     grid-area: login;
     justify-self: center;
     align-self: center;
+}
+
+.loginButton button:hover {
+    background-color: #f8f8f8;
 }
