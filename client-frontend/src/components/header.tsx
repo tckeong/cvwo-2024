@@ -14,8 +14,9 @@ function Header() {
                 </Link>
                 <h4 id="logoTopic">Web Forum</h4>
             </div>
-            <div className="searchBar">
-                <TextField fullWidth={true} id="outlined-search" label="Search field"  type="search" margin="normal" sx={{minWidth: '10rem'}}/>
+            <div className="searchBar" style={{display: "flex", justifyContent: "center", alignContent: "center"}}>
+                <TextField fullWidth={true} id="outlined-search" label="Search field"  type="search" margin="normal" 
+                            sx={{minWidth: '10rem', justifySelf: "center", alignSelf: "center"}}/>
                 <Button className="searchBtn" sx={{marginTop: "0.5rem", marginLeft: '0.5rem', width: "auto", fontSize: '0.8rem', height: "60%",
                                                     justifySelf: "center", alignSelf: "center", padding: "0.2rem", minWidth: "fit-content"}}>
                     Search

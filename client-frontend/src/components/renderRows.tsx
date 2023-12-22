@@ -7,18 +7,21 @@ interface Props {
     index: number;
     handleClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => void;
     selectedIndex: number;
+    style: React.CSSProperties;
 }
 
 function RenderRows(props: Props) {
-    const { index, handleClick, selectedIndex} = props;
+    const { index, handleClick, selectedIndex, style} = props;
 
-  return (
-    <ListItem key={index} component="div" disablePadding>
-      <ListItemButton selected={index === selectedIndex} onClick={(event) => handleClick(event, index)}>
-        <ListItemText primary={`Item ${index + 1}`} />
-      </ListItemButton>
-    </ListItem>
-  );
+    return (
+      <ListItem key={index} component="div" disablePadding sx={{margin: "0px", padding: '0px', height: '100%'}} style={style}>
+        <ListItemButton selected={index === selectedIndex} onClick={(event) => handleClick(event, index)} 
+            sx={{margin: "0px", height: "100%", backgroundColor: "#f1f1f1", padding: "0px"}}
+        >
+          <ListItemText primary={`Item ${index + 1}`} sx={{margin: "0px", textAlign: "center"}} />
+        </ListItemButton>
+      </ListItem>
+    );
 }
 
 export default RenderRows;

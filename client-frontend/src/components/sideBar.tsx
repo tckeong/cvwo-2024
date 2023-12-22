@@ -1,8 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { Virtuoso } from 'react-virtuoso'
 import RenderRows from './renderRows';
 import "./css/scrollBar.css";
+import { FixedSizeList } from 'react-window';
+import AutoSizer from "react-virtualized-auto-sizer";
 
 function SideBar() {
     const [selectedIndex, setSelectedIndex] = React.useState(1);
@@ -18,14 +19,30 @@ function SideBar() {
 
   return (
     <Box
-      sx={{height: '100%', width: "100%", bgcolor: 'background.paper', borderRight: '1px solid #ccc'}}
+      sx={{backgroundColor: "#f1f1f1", height: '100%', width: '100%', margin: "0px", padding: "0px"}}
+      className="sideBar"
     >
-        <h4 style={{borderBottom: "1px solid #000000", padding: "0.5rem", margin: "0"}}>Topics</h4>
-       {/* <Virtuoso
-            style={{ height: '100%', padding:'0px', overflowY: 'auto' }}
-            totalCount={totalItems}
-            itemContent={i => <RenderRows index={i} handleClick={handleListItemClick} selectedIndex={selectedIndex} />}
-        /> */}
+        <AutoSizer>
+          {({ height, width }) => (
+            <FixedSizeList
+              className="sideBar"
+              height={height}
+              itemCount={totalItems}
+              itemSize={height / 5}
+              width={width}
+              style={{margin: "0px", padding: "0px"}}
+            >
+              {({ index, style }) => (
+                <RenderRows
+                  index={index}
+                  style={style}
+                  selectedIndex={selectedIndex}
+                  handleClick={handleListItemClick}
+                />
+              )}
+            </FixedSizeList>
+          )}
+        </AutoSizer>
     </Box>
   );
 }

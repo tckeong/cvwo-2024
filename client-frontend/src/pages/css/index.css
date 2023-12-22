@@ -1,0 +1,41 @@
+.main-layout {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-rows: 1fr 0.4fr 3fr 1fr;
+    grid-template-columns: 0.9fr 4fr;
+
+    grid-template-areas: 
+    "header header"
+    "topic content" 
+    "left-side content"
+    "add-posts content";
+}
+
+.header {
+    grid-area: header;
+}
+
+.topic {
+    display: flex;
+    grid-area: topic;
+    height: 100%;
+    width: auto;
+    align-content: center;
+    justify-content: center;
+}
+
+.sideBar {
+    grid-area: left-side;
+    border-right: 0.05rem solid #000000;
+}
+
+.addPosts {
+    grid-area: add-posts;
+    border-top: 0.05rem solid #000000;
+    border-right: 0.05rem solid #000000;
+}
+
+.content {
+    grid-area: content;
+}
