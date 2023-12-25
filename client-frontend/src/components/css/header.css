@@ -53,7 +53,7 @@
     flex-grow: 1;
 }
 
-.loginButton {
+.loginButton , .userButton{
     grid-area: login;
     justify-self: center;
     align-self: center;

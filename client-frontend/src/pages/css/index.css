@@ -28,11 +28,11 @@
 .sideBar {
     grid-area: left-side;
     border-right: 0.05rem solid #000000;
+    border-bottom: 0.05rem solid #000000;
 }
 
 .addPosts {
     grid-area: add-posts;
-    border-top: 0.05rem solid #000000;
     border-right: 0.05rem solid #000000;
 }
 

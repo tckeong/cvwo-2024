@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import RenderRows from './renderRows';
+import RenderSideRows from './renderSideRows';
 import "./css/scrollBar.css";
 import { FixedSizeList } from 'react-window';
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -33,7 +33,7 @@ function SideBar() {
               style={{margin: "0px", padding: "0px"}}
             >
               {({ index, style }) => (
-                <RenderRows
+                <RenderSideRows
                   index={index}
                   style={style}
                   selectedIndex={selectedIndex}

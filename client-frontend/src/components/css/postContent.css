@@ -1,0 +1,9 @@
+.card-content {
+    display: flex;
+    flex-direction: row;
+}
+
+.card-img {
+    margin: 1rem;
+    margin-left: 2rem;
+}

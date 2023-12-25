@@ -3,7 +3,8 @@ import "./css/header.css";
 import { Link } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Icon } from '@iconify/react';
+import PersonIcon from '@mui/icons-material/Person';
+import { IconButton, Typography } from "@mui/material";
 
 function Header() {
     return (
@@ -22,14 +23,15 @@ function Header() {
                     Search
                 </Button>
             </div>
-            <Link to="/login" className="loginButton">
-                {/* <Button variant="contained" endIcon={<Icon icon="oi:account-login" />} color="success">
+            {/* <Link to="/login" className="loginButton">
+                <Button variant="contained" endIcon={<Icon icon="oi:account-login" />} color="success">
                     Login
-                </Button> */}
-                <Button startIcon={<Icon icon="oi:person" />}>
-                    username
                 </Button>
-            </Link>
+            </Link> */}
+            <IconButton color="primary" aria-label="user" className="userButton">
+                <PersonIcon />
+                <Typography>username</Typography>
+            </IconButton>
         </div>
     );
 }

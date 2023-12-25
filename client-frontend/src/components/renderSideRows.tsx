@@ -10,7 +10,7 @@ interface Props {
     style: React.CSSProperties;
 }
 
-function RenderRows(props: Props) {
+function RenderSideRows(props: Props) {
     const { index, handleClick, selectedIndex, style} = props;
 
     return (
@@ -24,4 +24,4 @@ function RenderRows(props: Props) {
     );
 }
 
-export default RenderRows;
+export default RenderSideRows;
