@@ -3,12 +3,14 @@ import CardHeader from '@mui/material/CardHeader';
 import Avatar from '@mui/material/Avatar';
 import { Icon } from '@iconify/react';
 import CardActions from '@mui/material/CardActions';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import IconButton from '@mui/material/IconButton';
 import CommentIcon from '@mui/icons-material/Comment';
 import PostContent from './postContent';
 import ListItemButton from '@mui/material/ListItemButton';
+import Checkbox from '@mui/material/Checkbox';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Favorite from '@mui/icons-material/Favorite';
 
 interface Props {
     index: number;
@@ -36,9 +38,7 @@ function Post(props: Props) {
                 <PostContent />
             </ListItemButton>
             <CardActions disableSpacing >
-                <IconButton aria-label="add to favorites" >
-                    <FavoriteIcon />
-                </IconButton>
+                <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} />
                 <IconButton aria-label="share">
                     <ShareIcon />
                 </IconButton>
