@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import { Box } from "@mui/material";
 import { CardMedia } from "@mui/material";
 import { CardContent } from "@mui/material";
-import "./css/postContent.css"
+import "../css/postContent.css"
 
 type contentProps = {
     title: string;

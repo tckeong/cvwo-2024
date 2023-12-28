@@ -1,5 +1,5 @@
 import Layout from "./layout";
-import PostList from "../components/postList";
+import PostList from "../components/index/postList";
 
 function Index() {
     return (

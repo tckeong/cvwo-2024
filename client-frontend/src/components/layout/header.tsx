@@ -1,9 +1,9 @@
-import logo from "../resources/logo/logo.jpg";
-import "./css/header.css";
+import logo from "../../resources/logo/logo.jpg";
+import "../css/header.css";
 import { Link } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import UserLoginButton from "./userLoginButton";
+import UserLoginButton from "../index/userLoginButton";
 
 
 function Header() {

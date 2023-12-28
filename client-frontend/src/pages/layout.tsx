@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
-import Header from "../components/header";
-import SideBar from "../components/sideBar";
-import AddPosts from "../components/addPosts";
+import Header from "../components/layout/header";
+import SideBar from "../components/layout/sideBar";
+import AddPostButton from "../components/layout/addPostButton";
 import { ReactNode } from 'react';
 import HomeIcon from '@mui/icons-material/Home';
 
@@ -24,7 +24,7 @@ function Layout(props: Props) {
                 </Button>
             </Link>
             <SideBar />
-            <AddPosts />
+            <AddPostButton />
             {children}
         </Box>
     );

@@ -1,9 +1,10 @@
 import Layout from "./layout";
+import WritePost from "../components/addPost/writePost";
 
 function AddPost() {
     return (
         <Layout>
-            <h1>Add Post</h1>
+            <WritePost edit={false} />
         </Layout>
     );
 }

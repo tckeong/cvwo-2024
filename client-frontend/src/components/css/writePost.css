@@ -1,0 +1,14 @@
+.tags-btn-container {
+    display: grid;
+    grid-template-columns: 2fr 3fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "tags blank submit-btn";
+}
+
+.tags-checkbox {
+    grid-area: tags;
+}
+
+.submit-btn {
+    grid-area: submit-btn;
+}

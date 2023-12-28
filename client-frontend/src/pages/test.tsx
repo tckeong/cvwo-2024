@@ -1,29 +1,23 @@
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import React, { useEffect } from 'react';
 
 function Test() {
-  return (
-    <Form>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form.Group>
+  useEffect(() => {
+    // This code will run only once when the component mounts
+    console.log('Component mounted');
+    // Perform any initialization logic here
+    // For example, fetching data, setting up subscriptions, etc.
+    
+    // If you want to clean up the effect when the component unmounts,
+    // you can return a cleanup function from the effect
+    return () => {
+      // Clean-up logic here
+      // For example, unsubscribe from a subscription
+      console.log('Component unmounted');
+    };
+  }, []); // Empty dependency array ensures this effect runs only once
 
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control type="password" placeholder="Password" />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check type="checkbox" label="Check me out" />
-      </Form.Group>
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
-  );
+  // Rest of your component's code
+  return <div>My Component</div>;
 }
 
 export default Test;

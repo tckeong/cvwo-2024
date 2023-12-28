@@ -31,7 +31,7 @@ function RecommendPost(props: Props) {
                     </Avatar>
                     }
                     title="usename"
-                    sx={{padding: "0.5rem", paddingBottom: "0px", paddingLeft: "0.7rem"}}
+                    sx={{padding: "0.5rem", paddingBottom: "0px", paddingLeft: "0.7rem", alignSelf: "center", justifySelf: "center"}}
                 />
                 <CardContent sx={{display: "flex", alignContent: "center", justifyContent: "center", flexDirection: "column"}}>
                     <Typography component="div" variant="h5" sx={{alignSelf: "center", justifySelf: "center", paddingBottom: "1rem"}}>

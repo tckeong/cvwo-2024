@@ -1,13 +1,13 @@
 import {useParams} from 'react-router-dom';
-import PostDetail from '../components/postDetail';
-import RecommendBar from '../components/recommendBar';
-import PostComment from '../components/postComment';
+import PostDetail from '../components/postPage/postDetail';
+import RecommendBar from '../components/postPage/recommendBar';
+import PostComment from '../components/postPage/postComment';
 import Layout from './layout';
 import "./css/style.css"
 import {Box} from "@mui/material";
 
 function PostPage() {
-    const {postId} = useParams();
+    const {postId} = useParams<{postId: string}>();
 
     return (
         <Layout>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import RenderSideRows from './renderSideRows';
-import "./css/scrollBar.css";
+import "../css/scrollBar.css";
 import { FixedSizeList } from 'react-window';
 import AutoSizer from "react-virtualized-auto-sizer";
 
