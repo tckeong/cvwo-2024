@@ -17,7 +17,7 @@ function PostList() {
     };
   
     return (
-      <Box sx={{backgroundColor: "#f1f1f1", height: "100%", width: "100%"}} className="content" >
+      <Box sx={{backgroundColor: "#fafafa", height: "100%", width: "100%"}} className="content" >
         <List component="div" aria-label="post-list" sx={{height: "100%", width: "100%", overflowY: "scroll"}}>
             <div 
               style={{width: "100%", paddingLeft: "2rem", paddingTop: "1rem", display: "flex", flexDirection:"row", justifyContent: "space-between",

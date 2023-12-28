@@ -1,0 +1,9 @@
+.post-detail {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-detail-content {
+    display: flex;
+    flex-direction: row;
+}

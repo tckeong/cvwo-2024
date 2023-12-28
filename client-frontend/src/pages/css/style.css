@@ -2,13 +2,12 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-rows: 1fr 0.3fr 0.5fr 3fr 0.75fr;
+    grid-template-rows: 0.8fr 0.5fr 3fr 0.75fr;
     grid-template-columns: 0.9fr 4fr;
 
     grid-template-areas: 
     "header header"
     "home-button content"
-    "topic content" 
     "left-side content"
     "add-posts content";
 }
@@ -27,6 +26,7 @@
     padding: 0.5rem;
     width: auto;
     height: auto;
+    text-decoration: none;
 }
 
 .topic {
@@ -55,7 +55,7 @@
 
 .post-page-content {
     display: grid;
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 3.5fr 1fr;
     grid-template-rows: 1fr;
     grid-template-areas: "post-content recommend-bar";
     width: 100%;
@@ -70,7 +70,7 @@
 
 .recommend-bar {
     grid-area: recommend-bar;
-    border: 0.05rem solid #000000;
+    border-left: 0.05rem solid #000000;
     height: 100%;
     width: 100%;
 }

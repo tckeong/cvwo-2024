@@ -53,12 +53,8 @@
     flex-grow: 1;
 }
 
-.loginButton , .userButton{
+.user-login-btn{
     grid-area: login;
     justify-self: center;
     align-self: center;
-}
-
-.loginButton button:hover {
-    background-color: #f8f8f8;
 }

@@ -1,26 +1,39 @@
 import { Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box } from "@mui/material";
 import { CardMedia } from "@mui/material";
 import { CardContent } from "@mui/material";
 import "./css/postContent.css"
 
-function PostContent() {
+type contentProps = {
+    title: string;
+    content: string;
+}
+
+interface Props {
+    img: "none" | string;
+    content: contentProps;
+}
+
+function PostContent(props: Props) {
+    const { img, content } = props;
+
     return (
         <Box className="card-content">
-            <CardMedia
+            {(img !== "none") && <CardMedia
                 component="img"
                 sx={{ width: "5rem", height: "5rem", objectFit: "contain" }}
-                image="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
+                image={img}
                 alt="apple"
                 className="card-img"
-            />
-            <Box sx={{ display: 'flex', flexDirection: 'column' }} className="card-content">
+                style={{alignSelf: "center", justifySelf: "center"}}
+            />}
+            <Box sx={{ display: 'flex', flexDirection: 'column', width: "100%" }} className="card-content">
                 <CardContent sx={{ flex: '1 0 auto' }}>
                 <Typography component="div" variant="h5">
-                    Live From Space
+                    {content.title}
                 </Typography>
-                <Typography variant="subtitle1" color="text.secondary" component="div">
-                    Mac Miller
+                <Typography variant="subtitle1" color="text.secondary" component="div" paragraph={true} noWrap={false}>
+                    {content.content}
                 </Typography>
                 </CardContent>
             </Box>

@@ -11,13 +11,13 @@ function PostPage() {
 
     return (
         <Layout>
-            <Box className="content">
-                <Box className="post-page-content" >
-                    <Box className="post-content" >
+            <Box className="content" sx={{overflowY: "hidden", backgroundColor: "#F8F8FF"}}>
+                <Box className="post-page-content">
+                    <Box className="post-content" sx={{overflowY: "scroll"}}>
                         <PostDetail />
                         <PostComment />
                     </Box>
-                    <Box className="recommend-bar">
+                    <Box className="recommend-bar" sx={{overflowY: "scroll"}}>
                         <RecommendBar />
                     </Box>
                 </Box>
