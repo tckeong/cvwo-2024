@@ -10,7 +10,7 @@ function EditPost(props: Props) {
     // loading the post data from the server according to the post Id
     
     return (
-        <WritePost title="title" content="content" imgLink="imgLink" tagsIndex={[1,4,3]} edit={true} />
+        <WritePost title="title" content="content" imgLink="imgLink" tagsIndex={[1,3,5]} edit={true} />
     );
 }
 

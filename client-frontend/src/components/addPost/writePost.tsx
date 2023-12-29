@@ -2,7 +2,7 @@ import { Typography, Box, FormControl, ListItemText, OutlinedInput, InputLabel, 
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import "../css/writePost.css"
 
@@ -19,8 +19,6 @@ const names = [
     'Kelly Snyder',
 ];
 
-let tagsIndexCheck: number[] | undefined = undefined;
-
 interface Props {
     title?: string;
     content?: string;
@@ -29,25 +27,19 @@ interface Props {
     edit: boolean;
 }
 
+let initState : boolean = true;
+
 function WritePost(props: Props) {
     let { title, content, imgLink, tagsIndex, edit } = props;
-    let pageTitle = "Edit";
+    let pageTitle = (edit) ? "Edit" : "Create Post as username";
 
-    useEffect(() => {
-        tagsIndexCheck = tagsIndex;
-        console.log(tagsIndexCheck);
-    }, []);
-
-    if(!edit) {
-        title = "";
-        content = "";
-        imgLink = "";
-        pageTitle = "Create Post as username";
-    }
+    const [titleState, setTitleState] = useState<string>(title || "");
+    const [contentState, setContentState] = useState<string>(content || "");
+    const [imgLinkState, setImgLinkState] = useState<string>(imgLink || "");
 
     const tagsList = names;
 
-    const [tags, setTags] = useState<string[]>([]);
+    const [tags, setTags] = useState<string[]>(tagsIndex ? tagsIndex.map((index) => tagsList[index]) : []);
 
     const handleChange = (event: SelectChangeEvent<typeof tags>) => {
         const { target: { value } } = event;
@@ -70,23 +62,23 @@ function WritePost(props: Props) {
       };
 
       const tagsCheck = (tag: string) : boolean => {
-            console.log(tagsIndexCheck);
-            if(tagsIndexCheck) {
+            if(!initState) {
+                return false;
+            }
+
+            if(tagsIndex) {
                 let temp: number = -1;
 
-                for(let i = 0; i < tagsIndexCheck.length; i++) {
-                    const index = tagsIndexCheck[i];
+                for(let i = 0; i < tagsIndex.length; i++) {
+                    const index = tagsIndex[i];
                     if (tagsList[index] === tag) {
                         temp = index;
-                        setTags([tag, ...tags]);
                         break;
                     }
                 }
 
-                tagsIndexCheck = tagsIndexCheck.filter((index) => index !== temp);
-                
-                if(tagsIndexCheck.length === 0) {
-                    tagsIndexCheck = undefined;
+                if(tagsList.indexOf(tag) === tagsList.length - 1) {
+                    initState = false;
                 }
 
                 return temp !== -1;
@@ -102,16 +94,16 @@ function WritePost(props: Props) {
             <Form style={{padding: "1.5rem", paddingTop: "0.5rem"}}>
                 <Form.Group className="mb-3" controlId="formTitle">
                     <Form.Label style={{marginLeft: "0.5rem"}}>Title</Form.Label>
-                    <Form.Control as="textarea" placeholder="Title" value={title} onChange={(e) => title = e.target.value} required rows={1} />
+                    <Form.Control as="textarea" placeholder="Title" value={titleState} onChange={(e) => setTitleState(e.target.value)} required rows={1} />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formContent">
                     <Form.Label style={{marginLeft: "0.5rem"}}>Content</Form.Label>
-                    <Form.Control as="textarea" placeholder="Content" value={content} onChange={(e) => content = e.target.value} rows={4} />
+                    <Form.Control as="textarea" placeholder="Content" value={contentState} onChange={(e) => setContentState(e.target.value)} rows={4} />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formContent">
                     <Form.Label style={{marginLeft: "0.5rem"}}>Img Link</Form.Label>
-                    <Form.Control type="url" placeholder="link" value={imgLink} onChange={(e) => imgLink = e.target.value} />
+                    <Form.Control type="url" placeholder="link" value={imgLinkState} onChange={(e) => setImgLinkState(e.target.value)} />
                 </Form.Group>
                 <Box className="tags-btn-container">
                     <FormControl sx={{ width: "100%", height: "100%" }} className="tags-checkbox">
@@ -133,7 +125,7 @@ function WritePost(props: Props) {
                         ))}
                         </Select>
                     </FormControl>
-                    <Button variant="primary" type="reset" onClick={() => alert(title + " " + content + " " + imgLink + " " + tags)} className="submit-btn"
+                    <Button variant="primary" type="reset" onClick={() => alert(titleState + " " + contentState + " " + imgLinkState + " " + tags)} className="submit-btn"
                             style={{width: "80%", height: "80%", alignSelf: "center", justifySelf: "center"}} >
                         Submit
                     </Button>

@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { Popover } from '@mui/material';
 
 interface Props {
-    state: boolean;
+    loginState: boolean;
 }
 
 interface PropsPopper {
@@ -36,7 +36,7 @@ function UserButtonPopper(props: PropsPopper) {
 }
 
 function UserLoginButton(props: Props) {
-    const {state} = props;
+    const {loginState} = props;
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -49,7 +49,7 @@ function UserLoginButton(props: Props) {
 
     return (
         <div className='user-login-btn'>
-            {(state)
+            {(loginState)
             ? (<Link to="/login">
                     <Button variant="contained" endIcon={<LoginIcon />}>
                         Login

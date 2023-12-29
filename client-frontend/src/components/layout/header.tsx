@@ -3,7 +3,7 @@ import "../css/header.css";
 import { Link } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import UserLoginButton from "../index/userLoginButton";
+import UserLoginButton from "./userLoginButton";
 
 
 function Header() {
@@ -23,7 +23,7 @@ function Header() {
                     Search
                 </Button>
             </div>
-            <UserLoginButton state={false} />
+            <UserLoginButton loginState={true} />
         </div>
     );
 }
