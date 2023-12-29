@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/tckeong/cvwo-2024/internal/server"
 )
 
 func main() {
-	fmt.Println("Hello, World!")
+	app := server.InitServer()
+	fmt.Println("Server is running...")
+	app.Run("8000")
 }
