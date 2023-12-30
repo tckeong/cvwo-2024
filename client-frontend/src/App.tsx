@@ -6,6 +6,7 @@ import MyPosts from "./pages/myPosts";
 import EditPage from "./pages/editPage";
 import Login from "./pages/login";
 import SignUp from "./pages/signup";
+import SearchPage from "./pages/searchPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/edit/:postId" Component={EditPage} />
           <Route path="/login" Component={Login} />
           <Route path="/signup" Component={SignUp} />
+          <Route path="/search/:keywords" Component={SearchPage} />
         </Routes>
       </BrowserRouter>
     </>

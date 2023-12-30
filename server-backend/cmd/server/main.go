@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/tckeong/cvwo-2024/internal/server"
+	"github.com/tckeong/cvwo-2024/internal/router"
 )
 
 func main() {
-	app := server.InitServer()
+	app := router.InitServer()
 	fmt.Println("Server is running...")
-	app.Run("8000")
+	app.Run()
 }
