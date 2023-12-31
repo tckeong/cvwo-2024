@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/tckeong/cvwo-2024/internal/initializers"
 	"github.com/tckeong/cvwo-2024/internal/models"
 )
 
@@ -21,32 +20,26 @@ func LoginHandler(c *gin.Context) {
 		Password string `json:"password" binding:"required"`
 	}
 
-	if c.Bind(body) != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid request body",
-		})
+	if err := c.Bind(body); err != nil {
+		c.JSON(http.StatusBadRequest, ReturnMessage("Invalid request body", err, nil))
 
 		return
 	}
 
 	// check if the username and password is valid
-	user := new(models.User)
-	initializers.DB.First(user, "username = ?", body.Username)
+	user, err := models.SearchUserByName(body.Username)
 
-	if user.ID == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid username",
-		})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, ReturnMessage("Invalid username", err, nil))
 
 		return
 	}
 
-	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
+	// compare the password with the saved password
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid password",
-		})
+		c.JSON(http.StatusBadRequest, ReturnMessage("Invalid password", err, nil))
 
 		return
 	}
@@ -60,9 +53,7 @@ func LoginHandler(c *gin.Context) {
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to generate token",
-		})
+		c.JSON(http.StatusInternalServerError, ReturnMessage("Failed to generate token", err, nil))
 
 		return
 	}
@@ -71,7 +62,12 @@ func LoginHandler(c *gin.Context) {
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", tokenString, int(TokenPeriod.Seconds()), "", "", true, true)
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Login successful",
-	})
+	returnUser := models.User{
+		ID:       user.ID,
+		Username: user.Username,
+		Password: "",
+	}
+
+	// set the user id and username in the session
+	c.JSON(http.StatusOK, ReturnMessage("Login successful", nil, returnUser))
 }

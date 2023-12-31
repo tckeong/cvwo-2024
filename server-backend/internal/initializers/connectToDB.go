@@ -14,7 +14,7 @@ func ConnectToDB() {
 	var err error
 
 	// data source name
-	dsn := os.Getenv("DB")
+	dsn := os.Getenv("DSN")
 
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 

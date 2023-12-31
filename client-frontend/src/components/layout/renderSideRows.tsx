@@ -13,6 +13,10 @@ interface Props {
 function RenderSideRows(props: Props) {
     const { index, handleClick, selectedIndex, style} = props;
 
+    const Tags: string[] = ["Technology", "Programming Language", "Computer Science", "Finance", "Health", "Entertaiment", "Food", 
+                            "Travel", "Education", "Sport", "Fashion", "Music", "Movie", "Game", "Book", "Art", "Business", "Science", 
+                            "News", "Politics", "Other"];
+
     return (
       <ListItem key={index} component="div" disablePadding sx={{margin: "0px", padding: '0px', height: '100%'}} style={style}>
         <ListItemButton selected={index === selectedIndex} onClick={(event) => handleClick(event, index)} 

@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/tckeong/cvwo-2024/internal/handlers"
 	"github.com/tckeong/cvwo-2024/internal/initializers"
+	"github.com/tckeong/cvwo-2024/internal/middlewares"
 	"os"
 )
 
@@ -40,9 +41,22 @@ func (s *Server) initConfig() {
 
 	defaultPath := "/api/"
 
-	router.GET(defaultPath, handlers.IndexHandler)
+	// GET METHODS
+	router.GET(defaultPath+"all", handlers.GetAllThreadHandler)
+	router.GET(defaultPath+"thread", handlers.GetThreadHandler)
+
+	// POST METHODS
 	router.POST(defaultPath+"login", handlers.LoginHandler)
 	router.POST(defaultPath+"signup", handlers.SignUpHandler)
+	router.POST(defaultPath+"createThread", middlewares.AuthCheck, handlers.CreateThreadHandler)
+	router.POST(defaultPath+"addComment", middlewares.AuthCheck, handlers.AddCommentHandler)
+	router.POST(defaultPath+"search", handlers.SearchThreadsHandler)
+
+	// PATCH METHODS
+	router.PATCH(defaultPath+"edit", middlewares.AuthCheck, handlers.EditThreadHandler)
+
+	// DELETE METHODS
+	router.DELETE(defaultPath+"delete", middlewares.AuthCheck, handlers.DeleteThreadHandler)
 }
 
 // Run is a public method that runs the router.
