@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/tckeong/cvwo-2024/internal/handlers/messages"
+	"github.com/tckeong/cvwo-2024/internal/repository"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"os"
@@ -13,6 +15,8 @@ import (
 
 const TokenPeriod = time.Hour * 24
 
+// LoginHandler handles the POST request to /login.
+// request body: { username, password }
 func LoginHandler(c *gin.Context) {
 	// get the username and password from the request body
 	var body struct {
@@ -20,17 +24,17 @@ func LoginHandler(c *gin.Context) {
 		Password string `json:"password" binding:"required"`
 	}
 
-	if err := c.Bind(body); err != nil {
-		c.JSON(http.StatusBadRequest, ReturnMessage("Invalid request body", err, nil))
+	if err := c.Bind(&body); err != nil {
+		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
 	}
 
 	// check if the username and password is valid
-	user, err := models.SearchUserByName(body.Username)
+	user, err := repository.SearchUserByName(body.Username)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, ReturnMessage("Invalid username", err, nil))
+		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid username", err, nil))
 
 		return
 	}
@@ -39,7 +43,7 @@ func LoginHandler(c *gin.Context) {
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, ReturnMessage("Invalid password", err, nil))
+		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid password", err, nil))
 
 		return
 	}
@@ -53,7 +57,7 @@ func LoginHandler(c *gin.Context) {
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ReturnMessage("Failed to generate token", err, nil))
+		c.JSON(http.StatusInternalServerError, messages.ReturnMessage("Failed to generate token", err, nil))
 
 		return
 	}
@@ -69,5 +73,5 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	// set the user id and username in the session
-	c.JSON(http.StatusOK, ReturnMessage("Login successful", nil, returnUser))
+	c.JSON(http.StatusOK, messages.ReturnMessage("Login successful", nil, returnUser))
 }

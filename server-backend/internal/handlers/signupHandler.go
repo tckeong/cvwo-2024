@@ -2,11 +2,14 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/tckeong/cvwo-2024/internal/models"
+	"github.com/tckeong/cvwo-2024/internal/handlers/messages"
+	"github.com/tckeong/cvwo-2024/internal/repository"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
 
+// SignUpHandler handles the POST request to /signup.
+// request body: { username, password] }
 func SignUpHandler(c *gin.Context) {
 	// get the username and password from the request body
 	var body struct {
@@ -14,8 +17,8 @@ func SignUpHandler(c *gin.Context) {
 		Password string `json:"password" binding:"required"`
 	}
 
-	if err := c.Bind(body); err != nil {
-		c.JSON(http.StatusBadRequest, ReturnMessage("Invalid request body", err, nil))
+	if err := c.Bind(&body); err != nil {
+		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
 	}
@@ -24,19 +27,19 @@ func SignUpHandler(c *gin.Context) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ReturnMessage("Failed to hash password", err, nil))
+		c.JSON(http.StatusInternalServerError, messages.ReturnMessage("Failed to hash password", err, nil))
 
 		return
 	}
 
 	// create a new user
-	err = models.CreateUser(body.Username, string(hashedPassword))
+	err = repository.CreateUser(body.Username, string(hashedPassword))
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, ReturnMessage("Failed to create user", err, nil))
+		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Failed to create user", err, nil))
 
 		return
 	}
 
-	c.JSON(http.StatusOK, ReturnMessage("User created successfully", nil, nil))
+	c.JSON(http.StatusOK, messages.ReturnMessage("User created successfully", nil, nil))
 }

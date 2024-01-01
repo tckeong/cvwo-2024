@@ -2,41 +2,36 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/tckeong/cvwo-2024/internal/models"
+	"github.com/tckeong/cvwo-2024/internal/handlers/messages"
+	"github.com/tckeong/cvwo-2024/internal/repository"
 	"net/http"
 	"strings"
 )
 
+// SearchThreadsHandler handles the POST request to /search.
+// request body: { keywords }
 func SearchThreadsHandler(c *gin.Context) {
 	var body struct {
 		Keywords string `json:"keywords"`
 	}
 
-	if err := c.Bind(body); err != nil {
-		c.JSON(http.StatusBadRequest, ReturnMessage("Invalid request body", err, nil))
+	if err := c.Bind(&body); err != nil {
+		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
 	}
 
 	// search the threads
-	keywords := strings.Split(body.Keywords, " ")
-	threads := make([]models.Thread, 0)
+	keywords := strings.Split(body.Keywords, ",")
 
-	for i := 0; i < len(keywords); i++ {
-		result, err := models.GetThreadsByTag(keywords[i])
+	threads, err := repository.GetThreadsByKeywords(&keywords)
 
-		if err == nil {
-			threads = append(threads, result...)
-			continue
-		}
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, messages.ReturnMessage("Get threads error", err, nil))
 
-		result, err = models.GetThreadsByKeyword(keywords[i])
-
-		if err == nil {
-			threads = append(threads, result...)
-		}
+		return
 	}
 
 	// return the threads
-	c.JSON(http.StatusOK, ReturnMessage("Threads retrieved successfully", nil, threads))
+	c.JSON(http.StatusOK, messages.ReturnMessage("Threads retrieved successfully", nil, threads))
 }

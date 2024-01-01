@@ -43,20 +43,22 @@ func (s *Server) initConfig() {
 
 	// GET METHODS
 	router.GET(defaultPath+"all", handlers.GetAllThreadHandler)
-	router.GET(defaultPath+"thread", handlers.GetThreadHandler)
+	router.GET(defaultPath+"thread/:thread_id", handlers.GetThreadHandler)
+	router.GET(defaultPath+"comment/:thread_id", handlers.GetAllCommentHandler)
+	router.GET(defaultPath+"user", middlewares.AuthCheck, handlers.GetThreadsByUserHandler)
 
 	// POST METHODS
 	router.POST(defaultPath+"login", handlers.LoginHandler)
 	router.POST(defaultPath+"signup", handlers.SignUpHandler)
-	router.POST(defaultPath+"createThread", middlewares.AuthCheck, handlers.CreateThreadHandler)
-	router.POST(defaultPath+"addComment", middlewares.AuthCheck, handlers.AddCommentHandler)
+	router.POST(defaultPath+"thread", middlewares.AuthCheck, handlers.CreateThreadHandler)
+	router.POST(defaultPath+"comment", middlewares.AuthCheck, handlers.AddCommentHandler)
 	router.POST(defaultPath+"search", handlers.SearchThreadsHandler)
 
-	// PATCH METHODS
-	router.PATCH(defaultPath+"edit", middlewares.AuthCheck, handlers.EditThreadHandler)
+	// PUT METHODS
+	router.PUT(defaultPath+"thread", middlewares.AuthCheck, handlers.EditThreadHandler)
 
 	// DELETE METHODS
-	router.DELETE(defaultPath+"delete", middlewares.AuthCheck, handlers.DeleteThreadHandler)
+	router.DELETE(defaultPath+"thread", middlewares.AuthCheck, handlers.DeleteThreadHandler)
 }
 
 // Run is a public method that runs the router.
