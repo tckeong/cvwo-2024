@@ -3,6 +3,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useState } from "react";
+import Cookies from "js-cookie";
 
 import "../css/writePost.css"
 
@@ -31,7 +32,10 @@ let initState : boolean = true;
 
 function WritePost(props: Props) {
     let { title, content, imgLink, tagsIndex, edit } = props;
-    let pageTitle = (edit) ? "Edit" : "Create Post as username";
+
+    const username = Cookies.get("username") || "";
+
+    let pageTitle = (edit) ? "Edit" : `Create Post as ${username}`;
 
     const [titleState, setTitleState] = useState<string>(title || "");
     const [contentState, setContentState] = useState<string>(content || "");

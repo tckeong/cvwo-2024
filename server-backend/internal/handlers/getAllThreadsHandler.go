@@ -10,7 +10,7 @@ import (
 // GetAllThreadHandler is a public method that handles the index route.
 // request body: {}
 func GetAllThreadHandler(c *gin.Context) {
-	threads, err := repository.GetAllThreads()
+	threadsID, err := repository.GetAllThreadsID()
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, messages.ReturnMessage("Error retrieving threads", err, nil))
@@ -18,5 +18,5 @@ func GetAllThreadHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, messages.ReturnMessage("Threads retrieved successfully", nil, threads))
+	c.JSON(200, messages.ReturnMessage("Threads retrieved successfully", nil, threadsID))
 }

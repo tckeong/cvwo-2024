@@ -17,8 +17,6 @@ interface Props {
 function Layout(props: Props) {
     const { children } = props;
     
-    console.log(import.meta.env.VITE_REACT_APP_API_URL);
-
     return (
         <Box className="main-layout">
             <Header />

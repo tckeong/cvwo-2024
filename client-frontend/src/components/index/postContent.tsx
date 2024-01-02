@@ -5,12 +5,12 @@ import { CardContent } from "@mui/material";
 import "../css/postContent.css"
 
 type contentProps = {
-    title: string;
-    content: string;
+    title?: string;
+    content?: string;
 }
 
-interface Props {
-    img: "none" | string;
+export interface Props {
+    img?: string;
     content: contentProps;
 }
 
@@ -19,15 +19,15 @@ function PostContent(props: Props) {
 
     return (
         <Box className="card-content">
-            {(img !== "none") && <CardMedia
+            {(img !== undefined && img !== "") && <CardMedia
                 component="img"
                 sx={{ width: "5rem", height: "5rem", objectFit: "contain" }}
                 image={img}
-                alt="apple"
+                alt={img}
                 className="card-img"
                 style={{alignSelf: "center", justifySelf: "center"}}
             />}
-            <Box sx={{ display: 'flex', flexDirection: 'column', width: "100%" }} className="card-content">
+            <Box sx={{ display: 'flex', flexDirection: 'column', width: "100%" , marginLeft: "1rem"}} className="card-content">
                 <CardContent sx={{ flex: '1 0 auto' }}>
                 <Typography component="div" variant="h5">
                     {content.title}

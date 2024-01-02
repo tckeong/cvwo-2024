@@ -8,22 +8,15 @@ import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
+import { PostType } from '../index/post';
 
 import { Typography } from "@mui/material";
 import { Box } from "@mui/material";
 import { CardMedia } from "@mui/material";
 import { CardContent } from "@mui/material";
+import { Props } from '../index/postContent';
+import { FormatDate } from '../index/post';
 import "../css/postDetail.css"
-
-type contentProps = {
-    title: string;
-    content: string;
-}
-
-interface Props {
-    img: "none" | string;
-    content: contentProps;
-}
 
 function PostContent(props: Props) {
     const { img, content } = props;
@@ -34,11 +27,11 @@ function PostContent(props: Props) {
                     {content.title}
             </Typography>
             <Box className="post-detail-content">
-                {(img !== "none") && <CardMedia
+                {(img !== undefined && img !== "") && <CardMedia
                     component="img"
                     sx={{ width: "5rem", height: "5rem", objectFit: "contain" }}
                     image={img}
-                    alt="apple"
+                    alt={img}
                     className="card-img"
                     style={{alignSelf: "center", justifySelf: "center"}}
                 />}
@@ -53,7 +46,13 @@ function PostContent(props: Props) {
     )
 }
 
-function PostDetail() {
+interface PostDetailProps {
+    post: PostType | undefined;
+}
+
+function PostDetail(props: PostDetailProps) {
+    const { post } = props;
+
     return (
         <Card sx={{width: "auto", height: "auto", padding: "0px", margin: "1rem", backgroundColor: "#F8F8FF", border: "0px"}} elevation={6}>
             <CardHeader
@@ -62,13 +61,18 @@ function PostDetail() {
                     <Icon icon="oi:person" />
                 </Avatar>
                 }
-                title="usename"
-                subheader="September 14, 2016"
+                title={post?.authorName}
+                subheader={FormatDate(post ? post.CreatedAt : "")}
             />
-            <PostContent img="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" content={{title: "Live From Space", content: "hello"}}/>
-            <Typography variant="subtitle1" color="text.secondary" component="div" sx={{paddingLeft: "1rem"}}>
-                #tag #tag #tag
-            </Typography>
+            <PostContent img={post?.imgLink} content={{title: post?.title, content: post?.content}}/>
+            <Box sx={{display: "flex", flexDirection: "row"}}>
+                {post?.tags.split(",").map((tags) => {
+                    return (
+                    <Typography variant="subtitle1" color="text.secondary" component="div" sx={{paddingLeft: "1.5rem"}}>
+                        #{tags}
+                    </Typography>);
+                })}
+            </Box>
             <CardActions disableSpacing sx={{marginLeft: "0.25rem"}}>
                 <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} />
                 <IconButton aria-label="share">

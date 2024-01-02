@@ -11,6 +11,32 @@ import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 import CardActionArea from '@mui/material/CardActionArea';
+import { useEffect, useState } from 'react';
+import API_URL from '../../api/apiConfig';
+
+export type PostType = {
+    ID: number;
+    CreatedAt: string;
+    UpdatedAt: string;
+    DeletedAt: string;
+    Author: {
+        id: number;
+        username: string;
+        password: string;
+    }
+    authorID: number;
+    authorName: string;
+    title: string;
+    content: string;
+    imgLink: string;
+    tags: string;
+    likedBy: string;
+}
+
+export function FormatDate(date: string): string {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(date).toLocaleDateString('en-US', options);
+}   
 
 interface Props {
     index: number;
@@ -19,6 +45,25 @@ interface Props {
 
 function Post(props: Props) {
     const { index, handleClick} = props;
+
+    const [post, setPost] = useState<PostType | undefined>(undefined);
+
+    useEffect(() => {
+        fetch(`${API_URL}thread/${index}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(data => {
+                    setPost(data.value);
+                });
+            }
+        }).catch(err => {
+            console.log(err);
+        })
+    }, [index]);   
 
     return (
         <Card sx={{width: "auto", border: "0.001rem solid #000000", height: "auto", backgroundColor: "#f1f1f1", padding: "0px", margin: "1rem"}}>
@@ -33,10 +78,10 @@ function Post(props: Props) {
                         <Icon icon="oi:person" />
                     </Avatar>
                     }
-                    title="usename"
-                    subheader="September 14, 2016"
+                    title={post?.authorName}
+                    subheader={post ? FormatDate(post.CreatedAt) : ""}
                 />
-                <PostContent img='https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg' content={{title: "Live From Space", content: "hello"}} />
+                <PostContent img={post?.imgLink} content={{title: post?.title, content: post?.content}} />
             </CardActionArea>
             <CardActions disableSpacing >
                 <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} />

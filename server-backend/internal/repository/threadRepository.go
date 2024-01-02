@@ -11,6 +11,22 @@ func GetAllThreads() ([]models.Thread, error) {
 	return threads, err
 }
 
+func GetAllThreadsID() ([]uint, error) {
+	threads, err := GetAllThreads()
+
+	if err != nil {
+		return nil, err
+	}
+
+	threadsID := make([]uint, len(threads))
+
+	for i := 0; i < len(threads); i++ {
+		threadsID[i] = threads[i].ID
+	}
+
+	return threadsID, nil
+}
+
 func GetThreadByID(id uint) (models.Thread, error) {
 	var thread models.Thread
 	err := initializers.DB.First(&thread, id).Error
@@ -38,6 +54,22 @@ func GetThreadsByKeywords(keywords *[]string) ([]models.Thread, error) {
 	var threads []models.Thread
 	err := initializers.DB.Where(query).Find(&threads).Error
 	return threads, err
+}
+
+func GetThreadsIDByKeywords(keywords *[]string) ([]uint, error) {
+	threads, err := GetThreadsByKeywords(keywords)
+
+	if err != nil {
+		return nil, err
+	}
+
+	threadsID := make([]uint, len(threads))
+
+	for i := 0; i < len(threads); i++ {
+		threadsID[i] = threads[i].ID
+	}
+
+	return threadsID, nil
 }
 
 func GetThreadsByTag(tag string) ([]models.Thread, error) {

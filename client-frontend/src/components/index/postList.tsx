@@ -1,21 +1,32 @@
 import Post from './post';
 import { Box, Typography } from "@mui/material";
-import * as React from 'react';
 import List from '@mui/material/List';
 import { useNavigate } from 'react-router-dom';
 import SortedType from './sortedType';
+import { useEffect, useState } from 'react';
+import API_URL from '../../api/apiConfig';
 
 function PostList() {
-    const [selectedIndex, setSelectedIndex] = React.useState(1);
     const navigate = useNavigate();
 
-    const handleListItemClick = (
-      event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-      index: number,
-    ) => {
-      setSelectedIndex(index);
-    };
-  
+    const [result, setResult] = useState<number[] | undefined>(undefined); 
+
+    useEffect(() => {
+        fetch(`${API_URL}all`, {
+            method: "GET",
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(data => {
+                    setResult(data.value);
+                });
+            }
+        }).catch(err => {
+            console.log(err);
+        })
+    }, [])
+
+    console.log(result);
+
     return (
       <Box sx={{backgroundColor: "#fafafa", height: "100%", width: "100%"}} className="content" >
         <List component="div" aria-label="post-list" sx={{height: "100%", width: "100%", overflowY: "scroll"}}>
@@ -27,13 +38,15 @@ function PostList() {
               </Typography>
               <SortedType />
             </div>
-            <Post index={1} handleClick={(index) => navigate("/post/" + index)} />
-            <Post index={2} handleClick={(index) => navigate("/post/" + index)} />
-            <Post index={3} handleClick={(index) => navigate("/post/" + index)} />
-            <Post index={4} handleClick={(index) => navigate("/post/" + index)} />
-            <Post index={5} handleClick={(index) => navigate("/post/" + index)} />
-            <Post index={6} handleClick={(index) => navigate("/post/" + index)} />
-            <Post index={7} handleClick={(index) => navigate("/post/" + index)} />
+            {
+                (result === undefined || result.length === 0) 
+                ?( <Typography variant="h4" component="div" sx={{fontWeight: "bold", alignSelf: "center", margin: "2rem", marginLeft: "3rem"}}>
+                        no posts found
+                    </Typography>)
+                : result.map((index) => {
+                    return <Post index={index} handleClick={(index) => navigate("/post/" + index)} />
+                })
+            }
         </List>
       </Box>
     );

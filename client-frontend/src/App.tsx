@@ -22,7 +22,7 @@ function App() {
           <Route path="/edit/:postId" Component={EditPage} />
           <Route path="/login" Component={Login} />
           <Route path="/signup" Component={SignUp} />
-          <Route path="/search/:keywords" Component={SearchPage} />
+          <Route path="/search" Component={SearchPage} />
         </Routes>
       </BrowserRouter>
     </>

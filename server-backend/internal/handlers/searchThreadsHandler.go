@@ -24,7 +24,7 @@ func SearchThreadsHandler(c *gin.Context) {
 	// search the threads
 	keywords := strings.Split(body.Keywords, ",")
 
-	threads, err := repository.GetThreadsByKeywords(&keywords)
+	threadsID, err := repository.GetThreadsIDByKeywords(&keywords)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, messages.ReturnMessage("Get threads error", err, nil))
@@ -33,5 +33,5 @@ func SearchThreadsHandler(c *gin.Context) {
 	}
 
 	// return the threads
-	c.JSON(http.StatusOK, messages.ReturnMessage("Threads retrieved successfully", nil, threads))
+	c.JSON(http.StatusOK, messages.ReturnMessage("Threads retrieved successfully", nil, threadsID))
 }

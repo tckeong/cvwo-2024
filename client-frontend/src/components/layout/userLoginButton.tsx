@@ -5,10 +5,7 @@ import Button from '@mui/material/Button';
 import LoginIcon from '@mui/icons-material/Login';
 import { useState } from 'react';
 import { Popover } from '@mui/material';
-
-interface Props {
-    loginState: boolean;
-}
+import Cookies from "js-cookie";
 
 interface PropsPopper {
     handleClose: () => void;
@@ -21,10 +18,17 @@ function UserButtonPopper(props: PropsPopper) {
     const open = Boolean(anchorEl);
     const id = "user-button-popper";
 
+    const handleLogout = () => {
+        Cookies.remove("Authorization");
+        Cookies.remove("username");
+        Cookies.remove("userId");
+        handleClose();
+    }
+
     return (
         <Popover id={id} anchorEl={anchorEl} onClose={handleClose} open={open} anchorOrigin={{vertical: "bottom", horizontal: "left"}} >
             <div style={{display: "flex", flexDirection: "column"}}>
-                <Button variant="contained" color="error" size='small'>
+                <Button variant="contained" color="error" size='small' onClick={handleLogout}>
                     Logout
                 </Button>
                 <Button variant="outlined" href="/myPosts" size='small'>
@@ -35,9 +39,12 @@ function UserButtonPopper(props: PropsPopper) {
     );
 }
 
-function UserLoginButton(props: Props) {
-    const {loginState} = props;
+function UserLoginButton() {
+    const [loginState, setLoginState] = useState(Cookies.get("Authorization") !== undefined);
+
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    
+    const username = Cookies.get("username") || "";
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -45,11 +52,12 @@ function UserLoginButton(props: Props) {
 
     const handleClose = () => {
         setAnchorEl(null);
+        setLoginState(false);
     };
 
     return (
         <div className='user-login-btn'>
-            {(loginState)
+            {(!loginState)
             ? (<Link to="/login">
                     <Button variant="contained" endIcon={<LoginIcon />}>
                         Login
@@ -57,7 +65,7 @@ function UserLoginButton(props: Props) {
                 </Link>)
             : (<IconButton color="primary" aria-label="user" onClick={handleClick}>
                 <PersonIcon />
-                <Typography>username</Typography>
+                <Typography>{username}</Typography>
             </IconButton>)}
             <UserButtonPopper handleClose={handleClose} anchorEl={anchorEl} /> 
         </div>

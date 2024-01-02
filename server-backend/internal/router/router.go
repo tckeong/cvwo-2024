@@ -2,6 +2,7 @@ package router
 
 import (
 	"fmt"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/tckeong/cvwo-2024/internal/handlers"
 	"github.com/tckeong/cvwo-2024/internal/initializers"
@@ -38,6 +39,12 @@ func InitServer() *Server {
 // It mounts all the handlers to the relevant routes.
 func (s *Server) initConfig() {
 	router := s.router
+
+	router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{os.Getenv("FRONTEND_URL")},
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders: []string{"Origin", "Content-Type"},
+	}))
 
 	defaultPath := "/api/"
 

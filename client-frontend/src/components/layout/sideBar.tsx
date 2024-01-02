@@ -4,12 +4,14 @@ import RenderSideRows from './renderSideRows';
 import "../css/scrollBar.css";
 import Tags from '../tags/tags';
 import List from '@mui/material/List';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
     index?: number;
 }
 
 function SideBar(props: Props) {
+    const navigate = useNavigate();
     const { index } = props;
 
     const [selectedIndex, setSelectedIndex] = React.useState(index ? index : -1);
@@ -19,7 +21,10 @@ function SideBar(props: Props) {
         _: React.MouseEvent<HTMLDivElement, MouseEvent>,
         index: number,
     ) => {
+        const tag = Tags[index][0];
         setSelectedIndex(index);
+        navigate(`/search/?keywords=${tag}`);
+
     };
 
   return (

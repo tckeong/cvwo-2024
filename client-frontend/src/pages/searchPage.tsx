@@ -1,13 +1,39 @@
 import { Box, List, Typography } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Post from "../components/index/post";
 import SortedType from "../components/index/sortedType";
 import Layout from "./layout";
+import { useEffect, useState } from "react";
+import API_URL from "../api/apiConfig";
 
 function SearchPage() {
-    const { keywords } = useParams();
+    const location = useLocation();
+    const query = new URLSearchParams(location.search).get("keywords");
+    const keywords: string = query ? query : "";
     const navigate = useNavigate();
 
+    const [result, setResult] = useState<number[] | undefined>(undefined); 
+
+    useEffect(() => {
+        fetch(`${API_URL}search`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                keywords: keywords
+            }),
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(data => {
+                    setResult(data.value);
+                });
+            }
+        }).catch(err => {
+            console.log(err);
+        })
+    }, [keywords])
+    
     return (
         <Layout>
             <Box sx={{backgroundColor: "#fafafa", height: "100%", width: "100%"}} className="content">           
@@ -16,17 +42,19 @@ function SearchPage() {
                     style={{width: "100%", paddingLeft: "2rem", paddingTop: "1rem", display: "flex", flexDirection:"row", justifyContent: "space-between",
                             paddingRight: "3rem"}}>
                     <Typography variant="h6" component="div" sx={{fontWeight: "bold", alignSelf: "center", margin: "0px"}}>
-                        Search Result by {keywords}: 7 posts
+                        Search Result by {keywords}: {result?.length} posts
                     </Typography>
                     <SortedType />
                     </div>
-                    <Post index={1} handleClick={(index) => navigate("/post/" + index)} />
-                    <Post index={2} handleClick={(index) => navigate("/post/" + index)} />
-                    <Post index={3} handleClick={(index) => navigate("/post/" + index)} />
-                    <Post index={4} handleClick={(index) => navigate("/post/" + index)} />
-                    <Post index={5} handleClick={(index) => navigate("/post/" + index)} />
-                    <Post index={6} handleClick={(index) => navigate("/post/" + index)} />
-                    <Post index={7} handleClick={(index) => navigate("/post/" + index)} />
+                    {
+                        (result === undefined || result.length === 0) 
+                        ?( <Typography variant="h4" component="div" sx={{fontWeight: "bold", alignSelf: "center", margin: "2rem", marginLeft: "3rem"}}>
+                                no posts found
+                            </Typography>)
+                        : result.map((index) => {
+                            return <Post index={index} handleClick={(index) => navigate("/post/" + index)} />
+                        })
+                    }
                 </List>
             </Box>
         </Layout>

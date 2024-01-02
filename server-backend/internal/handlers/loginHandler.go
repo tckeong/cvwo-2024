@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/tckeong/cvwo-2024/internal/models"
 )
 
 const TokenPeriod = time.Hour * 24
@@ -64,12 +63,18 @@ func LoginHandler(c *gin.Context) {
 
 	// return the jwt token
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", tokenString, int(TokenPeriod.Seconds()), "", "", true, true)
+	c.SetCookie("Authorization", tokenString, int(TokenPeriod.Seconds()), "", "", false, true)
 
-	returnUser := models.User{
+	type ReturnUser struct {
+		ID       uint   `json:"id"`
+		Username string `json:"username"`
+		Token    string `json:"token"`
+	}
+
+	returnUser := ReturnUser{
 		ID:       user.ID,
 		Username: user.Username,
-		Password: "",
+		Token:    tokenString,
 	}
 
 	// set the user id and username in the session
