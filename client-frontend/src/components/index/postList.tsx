@@ -12,9 +12,8 @@ function PostList() {
     const [result, setResult] = useState<number[] | undefined>(undefined); 
 
     useEffect(() => {
-        fetch(`${API_URL}all`, {
-            method: "GET",
-        }).then(response => {
+        fetch(`${API_URL}all`)
+        .then(response => {
             if (response.ok) {
                 response.json().then(data => {
                     setResult(data.value);
@@ -34,7 +33,7 @@ function PostList() {
               style={{width: "100%", paddingLeft: "2rem", paddingTop: "1rem", display: "flex", flexDirection:"row", justifyContent: "space-between",
                       paddingRight: "3rem"}}>
               <Typography variant="h6" component="div" sx={{fontWeight: "bold", alignSelf: "center", margin: "0px"}}>
-                have 7 posts
+                have {result?.length} posts
               </Typography>
               <SortedType />
             </div>

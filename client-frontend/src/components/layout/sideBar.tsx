@@ -36,6 +36,7 @@ function SideBar(props: Props) {
         <List sx={{margin: "0px", padding: "0px"}}>
           {Tags.map((tag, index) => (
             <RenderSideRows
+              key={index}
               index={index}
               selectedIndex={selectedIndex}
               handleClick={handleListItemClick}

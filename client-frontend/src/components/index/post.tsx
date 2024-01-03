@@ -19,11 +19,6 @@ export type PostType = {
     CreatedAt: string;
     UpdatedAt: string;
     DeletedAt: string;
-    Author: {
-        id: number;
-        username: string;
-        password: string;
-    }
     authorID: number;
     authorName: string;
     title: string;

@@ -41,7 +41,7 @@ function PostPage() {
                 ? ( <Box className="post-page-content">
                         <Box className="post-content" sx={{overflowY: "scroll"}}>
                             <PostDetail post={post} />
-                            <PostComment />
+                            <PostComment postID={post.ID} />
                         </Box>
                         <Box className="recommend-bar" sx={{overflowY: "scroll"}}>
                             <RecommendBar />

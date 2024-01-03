@@ -44,7 +44,8 @@ func GetThreadsByKeywords(keywords *[]string) ([]models.Thread, error) {
 	query := ""
 
 	for i := 0; i < len(keywordArray); i++ {
-		query += "title LIKE '%" + keywordArray[i] + "%'" + " OR " + "tags LIKE '%" + keywordArray[i] + "%'"
+		query += "title LIKE '%" + keywordArray[i] + "%'" + " OR " +
+			"tags LIKE '%" + keywordArray[i] + "%'" + " OR " + "content LIKE '%" + keywordArray[i] + "%'"
 
 		if i != len(keywordArray)-1 {
 			query += " OR "

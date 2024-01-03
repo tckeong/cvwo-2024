@@ -4,21 +4,11 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useState } from "react";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 import "../css/writePost.css"
-
-const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-];
+import API_URL from "../../api/apiConfig";
+import Tags from "../tags/tags";
 
 interface Props {
     title?: string;
@@ -41,7 +31,9 @@ function WritePost(props: Props) {
     const [contentState, setContentState] = useState<string>(content || "");
     const [imgLinkState, setImgLinkState] = useState<string>(imgLink || "");
 
-    const tagsList = names;
+    const tagsList = Tags.map((tag) => tag[0]);
+
+    const navigate = useNavigate();
 
     const [tags, setTags] = useState<string[]>(tagsIndex ? tagsIndex.map((index) => tagsList[index]) : []);
 
@@ -90,6 +82,33 @@ function WritePost(props: Props) {
             return false;
       }
 
+      const handleSubmit = () => {
+        fetch(`${API_URL}thread`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                title: titleState,
+                content: contentState,
+                img_link: imgLinkState,
+                tags: tags.join(",")
+            }),
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(_ => {
+                    alert("Post successfully created!");
+                    navigate("/");
+                });
+            } else {
+                alert("Post failed to create!");
+            }
+        }).catch(err => {
+            console.log(err);
+        })
+      }
+
 
     return (
         <div className="content" style={{overflowY: "scroll"}}>
@@ -129,7 +148,7 @@ function WritePost(props: Props) {
                         ))}
                         </Select>
                     </FormControl>
-                    <Button variant="primary" type="reset" onClick={() => alert(titleState + " " + contentState + " " + imgLinkState + " " + tags)} className="submit-btn"
+                    <Button variant="primary" type="reset" onClick={handleSubmit} className="submit-btn"
                             style={{width: "80%", height: "80%", alignSelf: "center", justifySelf: "center"}} >
                         Submit
                     </Button>

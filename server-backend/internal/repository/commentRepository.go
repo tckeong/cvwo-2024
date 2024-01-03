@@ -12,6 +12,28 @@ func GetCommentsByPostID(postID uint) ([]models.Comment, error) {
 	return comments, err
 }
 
+func GetCommentsIDByPostID(postID uint) ([]uint, error) {
+	comments, err := GetCommentsByPostID(postID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	commentsID := make([]uint, len(comments))
+
+	for i := 0; i < len(comments); i++ {
+		commentsID[i] = comments[i].ID
+	}
+
+	return commentsID, nil
+}
+
+func GetCommentByID(id uint) (models.Comment, error) {
+	var comment models.Comment
+	err := initializers.DB.First(&comment, id).Error
+	return comment, err
+}
+
 func CreateComment(content string, authorName string, authorID, postID uint) error {
 	comment := models.Comment{
 		Content:     content,

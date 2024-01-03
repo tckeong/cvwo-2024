@@ -12,5 +12,4 @@ type Comment struct {
 	AuthorName  string
 	CreatedTime time.Time `gorm:"type:date"`
 	Author      User      `gorm:"foreignKey:AuthorID"`
-	Thread      Thread    `gorm:"foreignKey:PostID"`
 }

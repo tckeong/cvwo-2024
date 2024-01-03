@@ -41,9 +41,10 @@ func (s *Server) initConfig() {
 	router := s.router
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{os.Getenv("FRONTEND_URL")},
-		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders: []string{"Origin", "Content-Type"},
+		AllowOrigins:     []string{os.Getenv("FRONTEND_URL")},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type"},
+		AllowCredentials: true,
 	}))
 
 	defaultPath := "/api/"
@@ -51,7 +52,8 @@ func (s *Server) initConfig() {
 	// GET METHODS
 	router.GET(defaultPath+"all", handlers.GetAllThreadHandler)
 	router.GET(defaultPath+"thread/:thread_id", handlers.GetThreadHandler)
-	router.GET(defaultPath+"comment/:thread_id", handlers.GetAllCommentHandler)
+	router.GET(defaultPath+"comments/:thread_id", handlers.GetAllCommentHandler)
+	router.GET(defaultPath+"comment/:comment_id", handlers.GetCommentHandler)
 	router.GET(defaultPath+"user", middlewares.AuthCheck, handlers.GetThreadsByUserHandler)
 
 	// POST METHODS

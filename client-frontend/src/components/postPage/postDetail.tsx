@@ -68,7 +68,7 @@ function PostDetail(props: PostDetailProps) {
             <Box sx={{display: "flex", flexDirection: "row"}}>
                 {post?.tags.split(",").map((tags) => {
                     return (
-                    <Typography variant="subtitle1" color="text.secondary" component="div" sx={{paddingLeft: "1.5rem"}}>
+                    <Typography key={tags} variant="subtitle1" color="text.secondary" component="div" sx={{paddingLeft: "1.5rem"}}>
                         #{tags}
                     </Typography>);
                 })}

@@ -21,7 +21,7 @@ function SearchPage() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                keywords: keywords
+                keywords: keywords.split(",").map((keyword) => keyword.trim()).join(","),
             }),
         }).then(response => {
             if (response.ok) {
