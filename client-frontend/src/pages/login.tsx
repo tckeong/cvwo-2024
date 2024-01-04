@@ -33,10 +33,10 @@ function Login() {
                 // Display a success message
                 alert(data.message);
           
-                // Set cookies using the response data
-                Cookies.set("Authorization", data.value.token, { expires: 1 });
-                Cookies.set("username", data.value.username, { expires: 1 });
-                Cookies.set("userId", data.value.id, { expires: 1 });
+                // Set session cookies using the response data
+                Cookies.set("Authorization", data.value.token);
+                Cookies.set("username", data.value.username);
+                Cookies.set("userId", data.value.id);
           
                 // Navigate to the home page
                 navigate("/");

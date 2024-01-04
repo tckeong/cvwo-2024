@@ -9,11 +9,12 @@ import Cookies from "js-cookie";
 
 interface PropsPopper {
     handleClose: () => void;
+    setLoginState: (state: boolean) => void;
     anchorEl: HTMLButtonElement | null;
 }
 
 function UserButtonPopper(props: PropsPopper) {
-    const { handleClose, anchorEl } = props;
+    const { handleClose, anchorEl, setLoginState } = props;
 
     const open = Boolean(anchorEl);
     const id = "user-button-popper";
@@ -23,6 +24,7 @@ function UserButtonPopper(props: PropsPopper) {
         Cookies.remove("username");
         Cookies.remove("userId");
         handleClose();
+        setLoginState(false);
     }
 
     return (
@@ -52,7 +54,6 @@ function UserLoginButton() {
 
     const handleClose = () => {
         setAnchorEl(null);
-        setLoginState(false);
     };
 
     return (
@@ -67,7 +68,7 @@ function UserLoginButton() {
                 <PersonIcon />
                 <Typography>{username}</Typography>
             </IconButton>)}
-            <UserButtonPopper handleClose={handleClose} anchorEl={anchorEl} /> 
+            <UserButtonPopper handleClose={handleClose} anchorEl={anchorEl} setLoginState={setLoginState} /> 
         </div>
     );
 }

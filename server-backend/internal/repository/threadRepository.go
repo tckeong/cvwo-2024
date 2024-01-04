@@ -44,8 +44,9 @@ func GetThreadsByKeywords(keywords *[]string) ([]models.Thread, error) {
 	query := ""
 
 	for i := 0; i < len(keywordArray); i++ {
-		query += "title LIKE '%" + keywordArray[i] + "%'" + " OR " +
-			"tags LIKE '%" + keywordArray[i] + "%'" + " OR " + "content LIKE '%" + keywordArray[i] + "%'"
+		query += "LOWER(title) LIKE LOWER('%" + keywordArray[i] + "%')" + " OR " +
+			"LOWER(tags) LIKE LOWER('%" + keywordArray[i] + "%')" + " OR " +
+			"LOWER(content) LIKE LOWER('%" + keywordArray[i] + "%')"
 
 		if i != len(keywordArray)-1 {
 			query += " OR "
@@ -71,12 +72,6 @@ func GetThreadsIDByKeywords(keywords *[]string) ([]uint, error) {
 	}
 
 	return threadsID, nil
-}
-
-func GetThreadsByTag(tag string) ([]models.Thread, error) {
-	var threads []models.Thread
-	err := initializers.DB.Where("tags LIKE '?'", "%"+tag+"%").Find(&threads).Error
-	return threads, err
 }
 
 func CreateThread(title, content, imgLink string, tags string, authorID uint, authorName string) error {
@@ -106,6 +101,37 @@ func UpdateThread(id uint, title, content, imgLink string, tags string) error {
 
 	return initializers.DB.Save(&thread).Error
 
+}
+
+func UpdateThreadLikeBy(threadID uint, userID uint, delete bool) error {
+	thread, err := GetThreadByID(threadID)
+
+	if err != nil {
+		return err
+	}
+
+	if delete {
+		for i := range thread.LikedBy {
+			if thread.LikedBy[i] == userID {
+				thread.LikedBy = append(thread.LikedBy[:i], thread.LikedBy[i+1:]...)
+			}
+		}
+	} else {
+		flag := true
+
+		for i := range thread.LikedBy {
+			if uint(thread.LikedBy[i]) == userID {
+				flag = false
+				break
+			}
+		}
+
+		if flag {
+			thread.LikedBy = append(thread.LikedBy, userID)
+		}
+	}
+
+	return initializers.DB.Save(&thread).Error
 }
 
 func DeleteThread(id uint) error {

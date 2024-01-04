@@ -13,6 +13,9 @@ import Favorite from '@mui/icons-material/Favorite';
 import CardActionArea from '@mui/material/CardActionArea';
 import { useEffect, useState } from 'react';
 import API_URL from '../../api/apiConfig';
+import { Action } from './postList';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 export type PostType = {
     ID: number;
@@ -36,12 +39,16 @@ export function FormatDate(date: string): string {
 interface Props {
     index: number;
     handleClick: (index: number) => void;
+    liked: boolean
+    dispatch: React.Dispatch<Action>;
 }
 
 function Post(props: Props) {
-    const { index, handleClick} = props;
+    const { index, handleClick, liked, dispatch } = props;
+    const navigate = useNavigate();
 
     const [post, setPost] = useState<PostType | undefined>(undefined);
+    const [checked, setChecked] = useState<boolean>(liked);
 
     useEffect(() => {
         fetch(`${API_URL}thread/${index}`, {
@@ -58,7 +65,23 @@ function Post(props: Props) {
         }).catch(err => {
             console.log(err);
         })
-    }, [index]);   
+
+    }, [index]);
+
+    const handleLike = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (Cookies.get("userId") === undefined) {
+            alert("Please login first!");
+            navigate("/login");
+            return;
+        }
+        
+        setChecked(event.target.checked);
+        if(event.target.checked) {
+            dispatch({type: "like", payload: {index: index}});
+        } else {
+            dispatch({type: "unlike", payload: {index: index}});
+        }
+    }
 
     return (
         <Card sx={{width: "auto", border: "0.001rem solid #000000", height: "auto", backgroundColor: "#f1f1f1", padding: "0px", margin: "1rem"}}>
@@ -79,7 +102,7 @@ function Post(props: Props) {
                 <PostContent img={post?.imgLink} content={{title: post?.title, content: post?.content}} />
             </CardActionArea>
             <CardActions disableSpacing >
-                <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} />
+                <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={checked} onChange={handleLike}/>
                 <IconButton aria-label="share">
                     <ShareIcon />
                 </IconButton>

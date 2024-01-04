@@ -55,6 +55,7 @@ func (s *Server) initConfig() {
 	router.GET(defaultPath+"comments/:thread_id", handlers.GetAllCommentHandler)
 	router.GET(defaultPath+"comment/:comment_id", handlers.GetCommentHandler)
 	router.GET(defaultPath+"user", middlewares.AuthCheck, handlers.GetThreadsByUserHandler)
+	router.GET(defaultPath+"like/:user_id", handlers.GetUserLikeHandler)
 
 	// POST METHODS
 	router.POST(defaultPath+"login", handlers.LoginHandler)
@@ -65,6 +66,7 @@ func (s *Server) initConfig() {
 
 	// PUT METHODS
 	router.PUT(defaultPath+"thread", middlewares.AuthCheck, handlers.EditThreadHandler)
+	router.PUT(defaultPath+"like", middlewares.AuthCheck, handlers.LikeThreadsHandler)
 
 	// DELETE METHODS
 	router.DELETE(defaultPath+"thread", middlewares.AuthCheck, handlers.DeleteThreadHandler)

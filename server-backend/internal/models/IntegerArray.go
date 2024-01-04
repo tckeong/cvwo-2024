@@ -2,34 +2,54 @@ package models
 
 import (
 	"database/sql/driver"
-	"encoding/json"
 	"errors"
 	"fmt"
+	"strconv"
+	"strings"
 )
 
 // IntArray represents an array of integers for PostgreSQL
-type IntegerArray []int
+type UintArray []uint
 
 // Value converts the IntArray to a format that can be stored in the database
-func (a IntegerArray) Value() (driver.Value, error) {
-	return json.Marshal(a)
+func (uintArray UintArray) Value() (driver.Value, error) {
+	result := ""
+
+	for i := 0; i < len(uintArray); i++ {
+		result += fmt.Sprintf("%d", uintArray[i])
+		if i != len(uintArray)-1 {
+			result += ","
+		}
+	}
+
+	return result, nil
 }
 
 // Scan converts the database representation to an IntArray
-func (a *IntegerArray) Scan(value interface{}) error {
+func (uintArray *UintArray) Scan(value interface{}) error {
 	if value == nil {
-		*a = nil
+		*uintArray = nil
 		return nil
 	}
-	b, ok := value.([]byte)
+
+	tempString, ok := value.(string)
 	if !ok {
-		return errors.New("Invalid type for IntArray")
+		return errors.New("invalid type for value")
 	}
-	var result []int
-	err := json.Unmarshal(b, &result)
-	if err != nil {
-		return fmt.Errorf("Error unmarshalling IntArray: %s", err)
+
+	tempString = strings.Trim(tempString, "{}")
+
+	for _, v := range strings.Split(tempString, ",") {
+		temp := string(v)
+
+		value, err := strconv.ParseUint(temp, 10, 64)
+
+		if err != nil {
+			return err
+		}
+
+		*uintArray = append(*uintArray, uint(value))
 	}
-	*a = result
+
 	return nil
 }

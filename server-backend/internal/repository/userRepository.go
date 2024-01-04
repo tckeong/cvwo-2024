@@ -17,6 +17,17 @@ func SearchUserByID(userID uint) (*models.User, error) {
 	return user, err
 }
 
+func GetUserLikeByID(userID uint) ([]uint, error) {
+	user := new(models.User)
+	err := initializers.DB.First(user, userID).Error
+
+	return user.Likes, err
+}
+
+func UpdateUser(user *models.User) error {
+	return initializers.DB.Save(user).Error
+}
+
 func CreateUser(username, password string) error {
 	user := &models.User{
 		Username: username,

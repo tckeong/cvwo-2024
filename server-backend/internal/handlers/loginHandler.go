@@ -62,7 +62,7 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	// return the jwt token
-	//c.SetSameSite(http.SameSiteLaxMode)
+	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", tokenString, int(TokenPeriod.Seconds()), "", "", true, true)
 
 	type ReturnUser struct {

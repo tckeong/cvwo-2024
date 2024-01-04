@@ -3,6 +3,8 @@ import TextField from '@mui/material/TextField';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import API_URL from '../../api/apiConfig';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 interface Props {
     postID: number;
@@ -13,7 +15,17 @@ function AddComment(props: Props) {
     const { postID, setStatus } = props;
     const [comment, setComment] = useState<string>("");
 
+    const navigate = useNavigate();
+
+    const loginState = Cookies.get("Authorization") !== undefined;
+
     const handleClick = () => {
+        if(!loginState) {
+            alert("Please login first!");
+            navigate("/login");
+            return ;
+        }
+        
         fetch(`${API_URL}comment`, {
             method: "POST",
             credentials: "include",

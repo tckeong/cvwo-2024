@@ -12,7 +12,7 @@ interface Props {
 function PostComment(props: Props) {
     const { postID } = props;
     const [commentsID, setCommentsID] = useState<number[]>([]);
-    const [status, setStatus] = useState<boolean>(false);
+    const [status, setStatus] = useState<boolean>(true);
 
     useEffect(() => {
         fetch(`${API_URL}comments/${postID}`, {
