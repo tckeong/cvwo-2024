@@ -1,4 +1,4 @@
-import { Box } from "@mui/system";
+import { Box } from "@mui/material";
 import AddComment from "./addComment";
 import { Divider } from "@mui/material";
 import Comment from "./comment";
@@ -34,7 +34,7 @@ function PostComment(props: Props) {
     }, [postID, status]);
 
     return (
-        <Box className="post-comment" sx={{margin: "2rem"}}>
+        <Box className="post-comment" sx={{margin: "2rem"}} >
             <AddComment postID={postID} setStatus={setStatus} />
             <Divider sx={{marginTop: "1.5rem"}}>All Comments</Divider>
             {commentsID.map((comment_id) => (

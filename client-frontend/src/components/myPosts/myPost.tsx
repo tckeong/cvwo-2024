@@ -62,7 +62,7 @@ function MyPost(props: Props) {
                     <IconButton aria-label="settings" onClick={handleClick}>
                       <MoreVertIcon />
                     </IconButton>
-                  }
+                }
             />
             <MyPostPopper handleClose={handleClose} anchorEl={anchorEl} />
             <Box className="post-detail" >

@@ -34,6 +34,18 @@ func GetCommentByID(id uint) (models.Comment, error) {
 	return comment, err
 }
 
+func UpdateCommentByID(id uint, content string) error {
+	comment, err := GetCommentByID(id)
+
+	if err != nil {
+		return err
+	}
+
+	comment.Content = content
+
+	return initializers.DB.Save(&comment).Error
+}
+
 func CreateComment(content string, authorName string, authorID, postID uint) error {
 	comment := models.Comment{
 		Content:     content,

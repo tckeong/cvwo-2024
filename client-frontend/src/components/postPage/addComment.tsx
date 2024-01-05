@@ -26,6 +26,8 @@ function AddComment(props: Props) {
             return ;
         }
         
+        if(comment.length === 0 || comment === "") return ; 
+
         fetch(`${API_URL}comment`, {
             method: "POST",
             credentials: "include",

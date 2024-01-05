@@ -67,6 +67,7 @@ func (s *Server) initConfig() {
 	// PUT METHODS
 	router.PUT(defaultPath+"thread", middlewares.AuthCheck, handlers.EditThreadHandler)
 	router.PUT(defaultPath+"like", middlewares.AuthCheck, handlers.LikeThreadsHandler)
+	router.PUT(defaultPath+"comment/:comment_id", middlewares.AuthCheck, handlers.UpdateCommentHandler)
 
 	// DELETE METHODS
 	router.DELETE(defaultPath+"thread", middlewares.AuthCheck, handlers.DeleteThreadHandler)

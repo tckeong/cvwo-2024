@@ -49,6 +49,7 @@ func LikeThreadsHandler(c *gin.Context) {
 		}
 	}
 
+	user.Likes = body.ThreadsID
 	err := repository.UpdateUser(user)
 
 	if err != nil {

@@ -42,6 +42,10 @@ func (uintArray *UintArray) Scan(value interface{}) error {
 	for _, v := range strings.Split(tempString, ",") {
 		temp := string(v)
 
+		if temp == "" {
+			continue
+		}
+
 		value, err := strconv.ParseUint(temp, 10, 64)
 
 		if err != nil {

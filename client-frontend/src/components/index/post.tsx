@@ -5,7 +5,6 @@ import { Icon } from '@iconify/react';
 import CardActions from '@mui/material/CardActions';
 import ShareIcon from '@mui/icons-material/Share';
 import IconButton from '@mui/material/IconButton';
-import CommentIcon from '@mui/icons-material/Comment';
 import PostContent from './postContent';
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
@@ -16,6 +15,7 @@ import API_URL from '../../api/apiConfig';
 import { Action } from './postList';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import {Snackbar, Alert} from '@mui/material';
 
 export type PostType = {
     ID: number;
@@ -49,6 +49,7 @@ function Post(props: Props) {
 
     const [post, setPost] = useState<PostType | undefined>(undefined);
     const [checked, setChecked] = useState<boolean>(liked);
+    const [open, setOpen] = useState<boolean>(false);
 
     useEffect(() => {
         fetch(`${API_URL}thread/${index}`, {
@@ -70,7 +71,7 @@ function Post(props: Props) {
 
     const handleLike = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (Cookies.get("userId") === undefined) {
-            alert("Please login first!");
+            alert("Please login to like this post!");
             navigate("/login");
             return;
         }
@@ -82,6 +83,19 @@ function Post(props: Props) {
             dispatch({type: "unlike", payload: {index: index}});
         }
     }
+
+    const handleShare = () => {
+        setOpen(true);
+        navigator.clipboard.writeText(`http://localhost:5173/post/${index}`).catch(err => console.log(err));
+    }
+
+    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpen(false);
+      };
 
     return (
         <Card sx={{width: "auto", border: "0.001rem solid #000000", height: "auto", backgroundColor: "#f1f1f1", padding: "0px", margin: "1rem"}}>
@@ -103,12 +117,14 @@ function Post(props: Props) {
             </CardActionArea>
             <CardActions disableSpacing >
                 <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={checked} onChange={handleLike}/>
-                <IconButton aria-label="share">
+                <IconButton aria-label="share" onClick={handleShare}>
                     <ShareIcon />
                 </IconButton>
-                <IconButton aria-label="comment">
-                    <CommentIcon />
-                </IconButton>
+                <Snackbar open={open} autoHideDuration={2000} onClose={handleClose} anchorOrigin={{vertical:"bottom", horizontal: "center"}}>
+                    <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }} >
+                        Copy thread link to clipboard successfully!
+                    </Alert>
+                </Snackbar>
             </CardActions>
         </Card>
     );
