@@ -7,7 +7,7 @@ import { useEffect, useState, useReducer } from 'react';
 import API_URL from '../../api/apiConfig';
 import Cookies from 'js-cookie';
 
-interface Action {
+export interface Action {
     type: 'like' | 'unlike';
     payload: {
         index: number;  
@@ -72,6 +72,7 @@ function PostList() {
                 console.log(err);
             })
         }
+        
 
         return () => {
             if(userID === undefined) return;

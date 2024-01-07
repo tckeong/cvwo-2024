@@ -95,7 +95,7 @@ function Post(props: Props) {
         }
     
         setOpen(false);
-      };
+    };
 
     return (
         <Card sx={{width: "auto", border: "0.001rem solid #000000", height: "auto", backgroundColor: "#f1f1f1", padding: "0px", margin: "1rem"}}>

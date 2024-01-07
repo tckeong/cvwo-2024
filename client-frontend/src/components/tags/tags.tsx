@@ -30,4 +30,6 @@ const Tags: pair[] = [
     ["Other", <FontAwesomeIcon icon={faBars} />],
 ];
 
+export const TagsLabel = Tags.map((tag) => tag[0]);
+
 export default Tags;

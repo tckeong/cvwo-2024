@@ -46,6 +46,10 @@ func UpdateCommentByID(id uint, content string) error {
 	return initializers.DB.Save(&comment).Error
 }
 
+func DeleteCommentByID(id uint) error {
+	return initializers.DB.Delete(&models.Comment{}, id).Error
+}
+
 func CreateComment(content string, authorName string, authorID, postID uint) error {
 	comment := models.Comment{
 		Content:     content,

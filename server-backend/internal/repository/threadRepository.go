@@ -39,6 +39,22 @@ func GetThreadsByAuthorID(authorID uint) ([]models.Thread, error) {
 	return threads, err
 }
 
+func GetThreadsIDByAuthorID(authorID uint) ([]uint, error) {
+	threads, err := GetThreadsByAuthorID(authorID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	threadsID := make([]uint, len(threads))
+
+	for i := 0; i < len(threads); i++ {
+		threadsID[i] = threads[i].ID
+	}
+
+	return threadsID, nil
+}
+
 func GetThreadsByKeywords(keywords *[]string) ([]models.Thread, error) {
 	keywordArray := *keywords
 	query := ""
@@ -120,7 +136,7 @@ func UpdateThreadLikeBy(threadID uint, userID uint, delete bool) error {
 		flag := true
 
 		for i := range thread.LikedBy {
-			if uint(thread.LikedBy[i]) == userID {
+			if thread.LikedBy[i] == userID {
 				flag = false
 				break
 			}

@@ -8,34 +8,22 @@ import { useNavigate } from "react-router-dom";
 
 import "../css/writePost.css"
 import API_URL from "../../api/apiConfig";
-import Tags from "../tags/tags";
+import { TagsLabel } from "../tags/tags";
 
-interface Props {
-    title?: string;
-    content?: string;
-    imgLink?: string;
-    tagsIndex?: number[] | undefined;
-    edit: boolean;
-}
-
-let initState : boolean = true;
-
-function WritePost(props: Props) {
-    let { title, content, imgLink, tagsIndex, edit } = props;
-
+function WritePost() {
     const username = Cookies.get("username") || "";
 
-    let pageTitle = (edit) ? "Edit" : `Create Post as ${username}`;
+    const pageTitle = `Create Post as ${username}`;
 
-    const [titleState, setTitleState] = useState<string>(title || "");
-    const [contentState, setContentState] = useState<string>(content || "");
-    const [imgLinkState, setImgLinkState] = useState<string>(imgLink || "");
+    const [titleState, setTitleState] = useState<string>("");
+    const [contentState, setContentState] = useState<string>("");
+    const [imgLinkState, setImgLinkState] = useState<string>("");
 
-    const tagsList = Tags.map((tag) => tag[0]);
+    const tagsList = TagsLabel;
 
     const navigate = useNavigate();
 
-    const [tags, setTags] = useState<string[]>(tagsIndex ? tagsIndex.map((index) => tagsList[index]) : []);
+    const [tags, setTags] = useState<string[]>([]);
 
     const handleChange = (event: SelectChangeEvent<typeof tags>) => {
         const { target: { value } } = event;
@@ -56,31 +44,6 @@ function WritePost(props: Props) {
           typeof value === 'string' ? value.split(',') : value,
         );
       };
-
-      const tagsCheck = (tag: string) : boolean => {
-            if(!initState) {
-                return false;
-            }
-
-            if(tagsIndex) {
-                let temp: number = -1;
-
-                for(let i = 0; i < tagsIndex.length; i++) {
-                    const index = tagsIndex[i];
-                    if (tagsList[index] === tag) {
-                        temp = index;
-                        break;
-                    }
-                }
-
-                if(tagsList.indexOf(tag) === tagsList.length - 1) {
-                    initState = false;
-                }
-
-                return temp !== -1;
-            }
-            return false;
-      }
 
       const handleSubmit = () => {
         fetch(`${API_URL}thread`, {
@@ -142,7 +105,7 @@ function WritePost(props: Props) {
                         >
                         {tagsList.map((tag) => (
                             <MenuItem key={tag} value={tag}>
-                            <Checkbox checked={tags.indexOf(tag) > -1 || tagsCheck(tag)} />
+                            <Checkbox checked={tags.indexOf(tag) > -1 } />
                             <ListItemText primary={tag} />
                             </MenuItem>
                         ))}

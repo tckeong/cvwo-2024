@@ -56,6 +56,7 @@ function SearchPage() {
             })
         }
 
+
         return () => {
             if(userID === undefined) return;
 

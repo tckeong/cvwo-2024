@@ -12,7 +12,7 @@ import (
 func GetThreadsByUserHandler(c *gin.Context) {
 	user := c.Keys["user"].(*models.User)
 
-	threads, err := repository.GetThreadsByAuthorID(user.ID)
+	threadsID, err := repository.GetThreadsIDByAuthorID(user.ID)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
@@ -20,5 +20,5 @@ func GetThreadsByUserHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, messages.ReturnMessage("Threads retrieved successfully", nil, threads))
+	c.JSON(http.StatusOK, messages.ReturnMessage("Threads retrieved successfully", nil, threadsID))
 }

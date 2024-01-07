@@ -1,4 +1,6 @@
-import { Avatar, Box, Card, CardContent, CardHeader, Typography, IconButton, Popover, Button, TextField } from "@mui/material";
+import { Avatar, Box, Card, CardContent, CardHeader, Typography, IconButton, Popover, Button, TextField, Dialog,
+        DialogTitle, DialogActions } from "@mui/material";
+
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 import API_URL from "../../api/apiConfig";
@@ -17,16 +19,73 @@ export type CommentType = {
 
 interface Props {
     index: number;
+    setStatus: (status: any) => void;
 }
 
 interface PropsPopper {
     handleClose: () => void;
     anchorEl: HTMLButtonElement | null;
     setEdit: (edit: boolean) => void;
+    commentID: number;
+    setStatus: (status: any) => void;
+}
+
+interface PropsDelete {
+    setOpen: (open: boolean) => void;
+    open: boolean;
+    id: number;
+    setStatus: (status: any) => void;
+}
+
+function DeleteAlert(props: PropsDelete) {
+    const { open, setOpen, id, setStatus } = props;
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleDelete = () => {
+        setOpen(false);
+
+        fetch(`${API_URL}comment`, {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                comment_id: id,
+            }),
+        }).catch(err => {
+            console.log(err);
+        })
+
+        setStatus((prevState: boolean) => !prevState);
+    }
+
+    return (
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">
+            {"Do you want to delete the comment ?"}
+            </DialogTitle>
+            <DialogActions>
+            <Button onClick={handleClose}>No</Button>
+            <Button onClick={handleDelete} autoFocus>
+                Yes
+            </Button>
+            </DialogActions>
+        </Dialog>
+    );
 }
 
 function CommentPopper(props: PropsPopper) {
-    const { handleClose, anchorEl, setEdit } = props;
+    const { handleClose, anchorEl, setEdit, commentID, setStatus } = props;
+    const [deleteAlert, setDeleteAlert] = useState<boolean>(false);
 
     const open = Boolean(anchorEl);
     const id = "comment-popper";
@@ -37,16 +96,17 @@ function CommentPopper(props: PropsPopper) {
                 <Button variant="contained" size='small' onClick={() => setEdit(true)}>
                     Edit
                 </Button>
-                <Button variant="contained" color="error" size='small'>
+                <Button variant="contained" color="error" size='small' onClick={() => setDeleteAlert(true)}>
                     Delete
                 </Button>
+                <DeleteAlert open={deleteAlert} setOpen={setDeleteAlert} id={commentID} setStatus={setStatus} />
             </div>
         </Popover>
     );
 }
 
 function Comment(props: Props) {
-    const { index } = props;
+    const { index, setStatus } = props;
     const userId = Cookies.get("userId");
     const userID: number | undefined = parseInt(userId ? userId : "-1", 10);
 
@@ -116,7 +176,7 @@ function Comment(props: Props) {
                     </IconButton>)
                 }
             />
-            <CommentPopper handleClose={handleClose} anchorEl={anchorEl} setEdit={setEdit} />
+            <CommentPopper handleClose={handleClose} anchorEl={anchorEl} setEdit={setEdit} commentID={index} setStatus={setStatus} />
             <Box sx={{ display: 'flex', flexDirection: 'column', width: "100%" }} className="card-content">
                 <CardContent sx={{ flex: '1 0 auto' }}>
                 { (edit)

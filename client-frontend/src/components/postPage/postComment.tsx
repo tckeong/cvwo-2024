@@ -38,7 +38,7 @@ function PostComment(props: Props) {
             <AddComment postID={postID} setStatus={setStatus} />
             <Divider sx={{marginTop: "1.5rem"}}>All Comments</Divider>
             {commentsID.map((comment_id) => (
-                <Comment key={comment_id} index={comment_id} />
+                <Comment key={comment_id} index={comment_id} setStatus={setStatus} />
             ))}
         </Box>
     );
