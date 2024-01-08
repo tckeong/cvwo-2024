@@ -1,19 +1,18 @@
-import { Card, CardHeader, Box, Typography, CardMedia, CardActions, Checkbox, IconButton, CardContent, Popover, Button,
-        Snackbar, Alert } from "@mui/material";
-import ShareIcon from '@mui/icons-material/Share';
+import { Card, CardHeader, Box, Typography, CardMedia, CardActions, Checkbox, IconButton, CardContent, Popover, Button } from "@mui/material";
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useEffect, useState } from "react";
 import API_URL from "../../api/apiConfig";
 import { PostType } from "../index/post";
-import { Action } from "../index/postList";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { like, unlike } from "../interact/likeInteract";
+import ShareButton from "../interact/shareButton";
 
 interface Props {
     postID: number;
     liked: boolean;
-    dispatch: React.Dispatch<Action>;
 }
 
 interface PropsPopper {
@@ -44,10 +43,10 @@ function MyPostPopper(props: PropsPopper) {
 }
 
 function MyPost(props: Props) {
-    const { postID, liked, dispatch } = props;
+    const { postID, liked } = props;
     const [content, setContent] = useState<PostType | undefined>(undefined);
-    const [open, setOpen] = useState<boolean>(false);
     const [checked, setChecked] = useState<boolean>(liked);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         fetch(`${API_URL}thread/${postID}`, {
@@ -76,25 +75,12 @@ function MyPost(props: Props) {
         setAnchorEl(null);
     };
 
-    const handleShare = () => {
-        setOpen(true);
-        navigator.clipboard.writeText(`http://localhost:5173/post/${postID}`).catch(err => console.log(err));
-    }
-
-    const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-          return;
-        }
-    
-        setOpen(false);
-    };
-
     const handleLike = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
         if(event.target.checked) {
-            dispatch({type: "like", payload: {index: postID}});
+            dispatch(like({index: postID}));
         } else {
-            dispatch({type: "unlike", payload: {index: postID}});
+            dispatch(unlike({index: postID}));
         }
     }
 
@@ -142,14 +128,7 @@ function MyPost(props: Props) {
             </Box>
             <CardActions disableSpacing sx={{marginLeft: "0.25rem"}}>
                 <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={checked} onChange={handleLike} />
-                <IconButton aria-label="share" onClick={handleShare}>
-                    <ShareIcon />
-                </IconButton>
-                <Snackbar open={open} autoHideDuration={2000} onClose={handleClose} anchorOrigin={{vertical:"bottom", horizontal: "center"}}>
-                    <Alert onClose={handleAlertClose} severity="success" sx={{ width: '100%' }} >
-                        Copy thread link to clipboard successfully!
-                    </Alert>
-                </Snackbar>
+                <ShareButton index={postID} />
             </CardActions>
         </Card>
     );

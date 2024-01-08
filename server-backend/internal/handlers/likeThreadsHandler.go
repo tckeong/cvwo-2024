@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/tckeong/cvwo-2024/internal/errorLog"
 	"github.com/tckeong/cvwo-2024/internal/handlers/messages"
 	"github.com/tckeong/cvwo-2024/internal/models"
 	"github.com/tckeong/cvwo-2024/internal/repository"
@@ -18,6 +19,8 @@ func LikeThreadsHandler(c *gin.Context) {
 	}
 
 	if err := c.Bind(&body); err != nil {
+		errorLog.LogError(err)
+
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -43,6 +46,8 @@ func LikeThreadsHandler(c *gin.Context) {
 		}
 
 		if err != nil {
+			errorLog.LogError(err)
+
 			c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 			return
@@ -53,6 +58,8 @@ func LikeThreadsHandler(c *gin.Context) {
 	err := repository.UpdateUser(user)
 
 	if err != nil {
+		errorLog.LogError(err)
+
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return

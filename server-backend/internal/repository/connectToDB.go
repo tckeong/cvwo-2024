@@ -1,4 +1,4 @@
-package initializers
+package repository
 
 import (
 	"gorm.io/driver/postgres"

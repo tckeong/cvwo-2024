@@ -1,14 +1,13 @@
 package repository
 
 import (
-	"github.com/tckeong/cvwo-2024/internal/initializers"
 	"github.com/tckeong/cvwo-2024/internal/models"
 	"time"
 )
 
 func GetCommentsByPostID(postID uint) ([]models.Comment, error) {
 	var comments []models.Comment
-	err := initializers.DB.Where("post_id = ?", postID).Find(&comments).Error
+	err := DB.Where("post_id = ?", postID).Find(&comments).Error
 	return comments, err
 }
 
@@ -30,7 +29,7 @@ func GetCommentsIDByPostID(postID uint) ([]uint, error) {
 
 func GetCommentByID(id uint) (models.Comment, error) {
 	var comment models.Comment
-	err := initializers.DB.First(&comment, id).Error
+	err := DB.First(&comment, id).Error
 	return comment, err
 }
 
@@ -43,11 +42,11 @@ func UpdateCommentByID(id uint, content string) error {
 
 	comment.Content = content
 
-	return initializers.DB.Save(&comment).Error
+	return DB.Save(&comment).Error
 }
 
 func DeleteCommentByID(id uint) error {
-	return initializers.DB.Delete(&models.Comment{}, id).Error
+	return DB.Delete(&models.Comment{}, id).Error
 }
 
 func CreateComment(content string, authorName string, authorID, postID uint) error {
@@ -59,5 +58,5 @@ func CreateComment(content string, authorName string, authorID, postID uint) err
 		PostID:      postID,
 	}
 
-	return initializers.DB.Create(&comment).Error
+	return DB.Create(&comment).Error
 }

@@ -8,5 +8,6 @@ import (
 func main() {
 	app := router.InitServer()
 	fmt.Println("Server is running...")
+
 	app.Run()
 }

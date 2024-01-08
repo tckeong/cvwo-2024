@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { PostType } from "../index/post";
 import API_URL from "../../api/apiConfig";
 import { Box, Typography, Divider, InputLabel, MenuItem, Checkbox, ListItemText, OutlinedInput, FormControl } from "@mui/material";
 import { Form, Button } from "react-bootstrap";
@@ -15,7 +14,6 @@ let initState: boolean = true;
 
 function EditPost(props: Props) {
     const { postId } = props;
-    const [content, setContent] = useState<PostType | undefined>(undefined);
     const pageTitle = "Edit Post";
 
     const [titleState, setTitleState] = useState<string>("");
@@ -112,7 +110,6 @@ function EditPost(props: Props) {
         }).then(response => {
             if (response.ok) {
                 response.json().then(data => {
-                    setContent(data.value);
                     setTitleState(data.value.title);
                     setContentState(data.value.content);
                     setImgLinkState(data.value.imgLink);

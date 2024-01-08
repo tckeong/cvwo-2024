@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/tckeong/cvwo-2024/internal/errorLog"
 	"github.com/tckeong/cvwo-2024/internal/handlers/messages"
 	"github.com/tckeong/cvwo-2024/internal/repository"
 	"net/http"
@@ -12,6 +13,8 @@ func GetCommentHandler(c *gin.Context) {
 	commentID, err := strconv.ParseUint(c.Param("comment_id"), 10, 64)
 
 	if err != nil {
+		errorLog.LogError(err)
+
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -20,6 +23,8 @@ func GetCommentHandler(c *gin.Context) {
 	comment, err := repository.GetCommentByID(uint(commentID))
 
 	if err != nil {
+		errorLog.LogError(err)
+
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return

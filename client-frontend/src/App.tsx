@@ -8,8 +8,38 @@ import Login from "./pages/login";
 import SignUp from "./pages/signup";
 import SearchPage from "./pages/searchPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { SubmitLikes, reset } from "./components/interact/likeInteract";
+import { useEffect } from "react";
+import Cookies from "js-cookie";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const handleBeforeUnload = async (event: any) => {
+      // Perform cleanup or execute actions before the app is closed
+      // For example, you can save data, send a request, or show a confirmation dialog
+      event.preventDefault();
+      const userID = Cookies.get("userId");
+      if(userID === undefined) return;
+
+      await SubmitLikes(() => dispatch(reset()));
+
+      Cookies.remove("Authorization");
+      Cookies.remove("username");
+      Cookies.remove("userId");
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      // Clean up the event listener when the component is unmounted
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
+
   return (
     <>
       <BrowserRouter>

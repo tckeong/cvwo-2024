@@ -3,37 +3,12 @@ import { Box, Typography } from "@mui/material";
 import List from '@mui/material/List';
 import { useNavigate } from 'react-router-dom';
 import SortedType from './sortedType';
-import { useEffect, useState, useReducer } from 'react';
+import { useEffect, useState } from 'react';
 import API_URL from '../../api/apiConfig';
 import Cookies from 'js-cookie';
-
-export interface Action {
-    type: 'like' | 'unlike';
-    payload: {
-        index: number;  
-    }
-}
-
-export const reducer = (state: number[], action: Action) => {
-    const { type, payload } = action;
-
-    switch (type) {
-        case "like": {
-            if (state.find(id => id === payload.index) !== undefined) return state;
-
-            const newState = [...state, payload.index];
-            localStorage.setItem("likes", JSON.stringify(newState));
-            return newState;
-        }
-        case "unlike": {
-            const newState = state.filter(id => id !== payload.index);
-            localStorage.setItem("likes", JSON.stringify(newState));
-            return newState;
-        }
-        default:
-            return state;
-    }
-}
+import { useDispatch } from 'react-redux';
+import { RootState, like } from '../interact/likeInteract';
+import { useSelector } from 'react-redux';
 
 function PostList() {
     const navigate = useNavigate();
@@ -41,7 +16,8 @@ function PostList() {
 
     const [result, setResult] = useState<number[]>([]);
     const [likes, setLikes] = useState<number[]>([]);
-    const [_, dispatch] = useReducer(reducer, []);
+    const dispatch = useDispatch();
+    const likeStore = useSelector((state: RootState) => state.like.value);
 
     useEffect(() => {
         fetch(`${API_URL}all`)
@@ -55,47 +31,26 @@ function PostList() {
             console.log(err);
         })
 
-        if(userID !== undefined) {
+        if(userID !== undefined && likeStore.length === 0) {
             fetch(`${API_URL}like/${userID}`)
             .then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        if(data.value === null) return;
+                        const value = data.value;
 
-                        setLikes(data.value);
-                        for (let i = 0; i < data.value.length; i++) {
-                            dispatch({type: "like", payload: {index: data.value[i]}});
+                        if(value === null) return;
+
+                        setLikes(value);
+                        for (let i = 0; i < value.length; i++) {
+                            dispatch(like( {index: value[i]}));
                         }
                     });
                 }
             }).catch(err => {
                 console.log(err);
             })
-        }
-        
-
-        return () => {
-            if(userID === undefined) return;
-
-            const likeStore = localStorage.getItem("likes");
-            const likes = likeStore?.substring(1, likeStore.length - 1).split(",")
-                                    .map(id => parseInt(id))
-                                    .filter(id => id !== undefined && id !== null && !isNaN(id));
-
-            localStorage.removeItem("likes");
-
-            if(likes === undefined) return;
-            
-            fetch(`${API_URL}like`, {
-                method: "PUT",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    likes: likes
-                })
-            })
+        } else {
+            setLikes(likeStore);
         }
     }, [userID])
 
@@ -108,7 +63,7 @@ function PostList() {
               <Typography variant="h6" component="div" sx={{fontWeight: "bold", alignSelf: "center", margin: "0px"}}>
                 have { result.length } posts
               </Typography>
-              <SortedType />
+              {/* <SortedType /> */}
             </div>
             {
                 (result.length === 0) 
@@ -116,7 +71,7 @@ function PostList() {
                         no posts found
                     </Typography>)
                 : result.map((index) => {
-                    return <Post key={index} index={index} dispatch={dispatch}
+                    return <Post key={index} index={index}
                             handleClick={(index) => navigate("/post/" + index)} liked={likes.find(id => id === index) === index} />
                 })
             }

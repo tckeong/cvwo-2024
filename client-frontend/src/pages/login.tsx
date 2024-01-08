@@ -57,7 +57,7 @@ function Login() {
     return (
         <div className="login-page">
             <div style={{gridArea: "logo", display: "flex", flexDirection: "row", justifyContent: "center", alignContent: "center"}}>
-                <Link href="/" style={{justifySelf: "center", alignSelf: "center"}}>
+                <Link onClick={() => navigate("/")} sx={{justifySelf: "center", alignSelf: "center", ":hover": {"cursor": "pointer"}}}>
                     <img src={logo} alt="logo" id="logoImg"/>
                 </Link>
                 <h4 id="logoTopic">Web Forum</h4>
@@ -80,7 +80,8 @@ function Login() {
                             Submit
                         </Button>
                     </Form>
-                    <Link href="/signup" underline="hover" color="white" sx={{justifySelf: "center", alignSelf: "center", marginTop: "0.5rem", fontSize: "0.8rem"}}>
+                    <Link onClick={() => navigate("/signup")} underline="hover" color="white" 
+                        sx={{justifySelf: "center", alignSelf: "center", marginTop: "0.5rem", fontSize: "0.8rem", ":hover": {"cursor": "pointer"}}}>
                         Don't have an account? Sign up here!
                     </Link>
                 </Box>

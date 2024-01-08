@@ -16,9 +16,7 @@ type Server struct {
 
 func init() {
 	// gin.SetMode(gin.ReleaseMode)
-	initializers.LoadEnvVariables()
-	initializers.ConnectToDB()
-	initializers.SyncDatabase()
+	initializers.InitConfigs()
 }
 
 // InitServer is a public method that initializes the router.
@@ -56,7 +54,6 @@ func (s *Server) initConfig() {
 	router.GET(defaultPath+"comment/:comment_id", handlers.GetCommentHandler)
 	router.GET(defaultPath+"user", middlewares.AuthCheck, handlers.GetThreadsByUserHandler)
 	router.GET(defaultPath+"like/:user_id", handlers.GetUserLikeHandler)
-	router.GET(defaultPath+"user_thread", middlewares.AuthCheck, handlers.GetThreadsByUserHandler)
 
 	// POST METHODS
 	router.POST(defaultPath+"login", handlers.LoginHandler)

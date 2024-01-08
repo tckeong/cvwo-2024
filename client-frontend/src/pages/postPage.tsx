@@ -9,10 +9,14 @@ import {Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import API_URL from "../api/apiConfig";
 import { PostType } from '../components/index/post';
+import {useSelector } from 'react-redux';
+import { RootState } from '../components/interact/likeInteract';
 
 function PostPage() {
     const {postId} = useParams<{postId: string}>();
     const [post, setPost] = useState<PostType | undefined>(undefined);
+    const [likes, setLikes] = useState<number[]>([]);
+   const likeStore = useSelector((state: RootState) => state.like.value);
 
     const index = parseInt(postId ? postId : "-1", 10);
 
@@ -31,6 +35,8 @@ function PostPage() {
         }).catch(err => {
             console.log(err);
         })
+
+        setLikes(likeStore);
     }, [index]);   
 
 
@@ -40,11 +46,11 @@ function PostPage() {
                 {(post !== undefined)
                 ? ( <Box className="post-page-content">
                         <Box className="post-content" sx={{overflowY: "scroll"}}>
-                            <PostDetail post={post} />
+                            <PostDetail post={post} liked={likes.find(id => id === index) === index} />
                             <PostComment postID={post.ID} />
                         </Box>
                         <Box className="recommend-bar" sx={{overflowY: "scroll"}}>
-                            <RecommendBar />
+                            <RecommendBar tags={post.tags} />
                         </Box>
                     </Box>)
                 : ( <Typography variant="h4" component="div" sx={{fontWeight: "bold", alignSelf: "center", margin: "2rem", marginLeft: "3rem"}}>

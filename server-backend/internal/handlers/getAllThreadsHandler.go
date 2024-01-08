@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/tckeong/cvwo-2024/internal/errorLog"
 	"github.com/tckeong/cvwo-2024/internal/handlers/messages"
 	"github.com/tckeong/cvwo-2024/internal/repository"
 	"net/http"
@@ -13,6 +14,8 @@ func GetAllThreadHandler(c *gin.Context) {
 	threadsID, err := repository.GetAllThreadsID()
 
 	if err != nil {
+		errorLog.LogError(err)
+
 		c.JSON(http.StatusInternalServerError, messages.ReturnMessage("Error retrieving threads", err, nil))
 
 		return

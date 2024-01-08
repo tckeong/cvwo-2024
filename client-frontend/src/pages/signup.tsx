@@ -30,7 +30,13 @@ function SignUp() {
                 username: username,
                 password: password
             })
-        }).then(res => res.json())
+        }).then(res => {
+            if (res.ok) {
+                return res.json();
+            } else {
+                throw new Error("Sign up failed!");
+            }
+        })
           .then(data => alert(data.message))
           .then(() => navigate("/login"))
           .catch(err => alert(err));
@@ -39,7 +45,7 @@ function SignUp() {
     return (
         <div className="signup-page">
             <div style={{gridArea: "logo", display: "flex", flexDirection: "row", justifyContent: "center", alignContent: "center"}}>
-                <Link href="/" style={{justifySelf: "center", alignSelf: "center"}}>
+                <Link onClick={() => navigate("/")} sx={{justifySelf: "center", alignSelf: "center", ":hover": {"cursor": "pointer"}}}>
                     <img src={logo} alt="logo" id="logoImg"/>
                 </Link>
                 <h4 id="logoTopic">Web Forum</h4>

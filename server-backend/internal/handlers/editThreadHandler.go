@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/tckeong/cvwo-2024/internal/errorLog"
 	"github.com/tckeong/cvwo-2024/internal/handlers/messages"
 	"github.com/tckeong/cvwo-2024/internal/models"
 	"github.com/tckeong/cvwo-2024/internal/repository"
@@ -20,6 +22,8 @@ func EditThreadHandler(c *gin.Context) {
 	}
 
 	if err := c.Bind(&body); err != nil {
+		errorLog.LogError(err)
+
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -30,6 +34,12 @@ func EditThreadHandler(c *gin.Context) {
 	thread, err := repository.GetThreadByID(body.PostID)
 
 	if err != nil || curUser.ID != thread.AuthorID {
+		if err == nil {
+			errorLog.LogError(errors.New("user is not the author of the thread"))
+		} else {
+			errorLog.LogError(err)
+		}
+
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -39,6 +49,8 @@ func EditThreadHandler(c *gin.Context) {
 	err = repository.UpdateThread(body.PostID, body.Title, body.Content, body.ImgLink, body.Tags)
 
 	if err != nil {
+		errorLog.LogError(err)
+
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return

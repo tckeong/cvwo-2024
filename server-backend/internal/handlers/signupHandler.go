@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/tckeong/cvwo-2024/internal/errorLog"
 	"github.com/tckeong/cvwo-2024/internal/handlers/messages"
 	"github.com/tckeong/cvwo-2024/internal/repository"
 	"golang.org/x/crypto/bcrypt"
@@ -18,6 +19,8 @@ func SignUpHandler(c *gin.Context) {
 	}
 
 	if err := c.Bind(&body); err != nil {
+		errorLog.LogError(err)
+
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -27,6 +30,8 @@ func SignUpHandler(c *gin.Context) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
 
 	if err != nil {
+		errorLog.LogError(err)
+
 		c.JSON(http.StatusInternalServerError, messages.ReturnMessage("Failed to hash password", err, nil))
 
 		return
@@ -36,6 +41,8 @@ func SignUpHandler(c *gin.Context) {
 	err = repository.CreateUser(body.Username, string(hashedPassword))
 
 	if err != nil {
+		errorLog.LogError(err)
+
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Failed to create user", err, nil))
 
 		return

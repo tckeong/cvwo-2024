@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/tckeong/cvwo-2024/internal/errorLog"
 	"github.com/tckeong/cvwo-2024/internal/handlers/messages"
 	"github.com/tckeong/cvwo-2024/internal/repository"
 	"golang.org/x/crypto/bcrypt"
@@ -24,6 +25,8 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	if err := c.Bind(&body); err != nil {
+		errorLog.LogError(err)
+
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -33,6 +36,8 @@ func LoginHandler(c *gin.Context) {
 	user, err := repository.SearchUserByName(body.Username)
 
 	if err != nil {
+		errorLog.LogError(err)
+
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid username", err, nil))
 
 		return
@@ -56,6 +61,8 @@ func LoginHandler(c *gin.Context) {
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
 
 	if err != nil {
+		errorLog.LogError(err)
+
 		c.JSON(http.StatusInternalServerError, messages.ReturnMessage("Failed to generate token", err, nil))
 
 		return

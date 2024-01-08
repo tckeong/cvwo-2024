@@ -1,11 +1,13 @@
 import PersonIcon from '@mui/icons-material/Person';
 import { IconButton, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import LoginIcon from '@mui/icons-material/Login';
 import { useState } from 'react';
 import { Popover } from '@mui/material';
 import Cookies from "js-cookie";
+import { SubmitLikes, reset } from '../interact/likeInteract';
+import { useDispatch } from 'react-redux';
 
 interface PropsPopper {
     handleClose: () => void;
@@ -15,11 +17,15 @@ interface PropsPopper {
 
 function UserButtonPopper(props: PropsPopper) {
     const { handleClose, anchorEl, setLoginState } = props;
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const open = Boolean(anchorEl);
     const id = "user-button-popper";
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        await SubmitLikes(() => dispatch(reset()));
+        
         Cookies.remove("Authorization");
         Cookies.remove("username");
         Cookies.remove("userId");
@@ -33,7 +39,7 @@ function UserButtonPopper(props: PropsPopper) {
                 <Button variant="contained" color="error" size='small' onClick={handleLogout}>
                     Logout
                 </Button>
-                <Button variant="outlined" href="/myPosts" size='small'>
+                <Button variant="outlined" onClick={() => navigate("/myPosts")} size='small'>
                     My Posts
                 </Button>
             </div>

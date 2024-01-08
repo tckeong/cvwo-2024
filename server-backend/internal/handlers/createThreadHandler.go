@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/tckeong/cvwo-2024/internal/errorLog"
 	"github.com/tckeong/cvwo-2024/internal/handlers/messages"
 	"github.com/tckeong/cvwo-2024/internal/models"
 	"github.com/tckeong/cvwo-2024/internal/repository"
@@ -19,6 +20,8 @@ func CreateThreadHandler(c *gin.Context) {
 	}
 
 	if err := c.Bind(&body); err != nil {
+		errorLog.LogError(err)
+
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -30,6 +33,8 @@ func CreateThreadHandler(c *gin.Context) {
 	err := repository.CreateThread(body.Title, body.Content, body.ImgLink, body.Tags, author.ID, author.Username)
 
 	if err != nil {
+		errorLog.LogError(err)
+
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return

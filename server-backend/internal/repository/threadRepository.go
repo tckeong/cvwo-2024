@@ -1,13 +1,12 @@
 package repository
 
 import (
-	"github.com/tckeong/cvwo-2024/internal/initializers"
 	"github.com/tckeong/cvwo-2024/internal/models"
 )
 
 func GetAllThreads() ([]models.Thread, error) {
 	var threads []models.Thread
-	err := initializers.DB.Find(&threads).Error
+	err := DB.Find(&threads).Error
 	return threads, err
 }
 
@@ -29,13 +28,13 @@ func GetAllThreadsID() ([]uint, error) {
 
 func GetThreadByID(id uint) (models.Thread, error) {
 	var thread models.Thread
-	err := initializers.DB.First(&thread, id).Error
+	err := DB.First(&thread, id).Error
 	return thread, err
 }
 
 func GetThreadsByAuthorID(authorID uint) ([]models.Thread, error) {
 	var threads []models.Thread
-	err := initializers.DB.Where("author_id = ?", authorID).Find(&threads).Error
+	err := DB.Where("author_id = ?", authorID).Find(&threads).Error
 	return threads, err
 }
 
@@ -70,7 +69,7 @@ func GetThreadsByKeywords(keywords *[]string) ([]models.Thread, error) {
 	}
 
 	var threads []models.Thread
-	err := initializers.DB.Where(query).Find(&threads).Error
+	err := DB.Where(query).Find(&threads).Error
 	return threads, err
 }
 
@@ -100,7 +99,7 @@ func CreateThread(title, content, imgLink string, tags string, authorID uint, au
 		AuthorName: authorName,
 	}
 
-	return initializers.DB.Create(&thread).Error
+	return DB.Create(&thread).Error
 }
 
 func UpdateThread(id uint, title, content, imgLink string, tags string) error {
@@ -115,12 +114,13 @@ func UpdateThread(id uint, title, content, imgLink string, tags string) error {
 	thread.ImgLink = imgLink
 	thread.Tags = tags
 
-	return initializers.DB.Save(&thread).Error
+	return DB.Save(&thread).Error
 
 }
 
 func UpdateThreadLikeBy(threadID uint, userID uint, delete bool) error {
 	thread, err := GetThreadByID(threadID)
+	newLikedBy := make([]uint, 0)
 
 	if err != nil {
 		return err
@@ -129,8 +129,10 @@ func UpdateThreadLikeBy(threadID uint, userID uint, delete bool) error {
 	if delete {
 		for i := range thread.LikedBy {
 			if thread.LikedBy[i] == userID {
-				thread.LikedBy = append(thread.LikedBy[:i], thread.LikedBy[i+1:]...)
+				continue
 			}
+
+			newLikedBy = append(newLikedBy, thread.LikedBy[i])
 		}
 	} else {
 		flag := true
@@ -143,14 +145,16 @@ func UpdateThreadLikeBy(threadID uint, userID uint, delete bool) error {
 		}
 
 		if flag {
-			thread.LikedBy = append(thread.LikedBy, userID)
+			newLikedBy = append(thread.LikedBy, userID)
 		}
 	}
 
-	return initializers.DB.Save(&thread).Error
+	thread.LikedBy = newLikedBy
+
+	return DB.Save(&thread).Error
 }
 
 func DeleteThread(id uint) error {
-	return initializers.DB.Delete(&models.Thread{}, id).Error
+	return DB.Delete(&models.Thread{}, id).Error
 
 }
