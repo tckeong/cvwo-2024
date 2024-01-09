@@ -18,9 +18,7 @@ func LikeThreadsHandler(c *gin.Context) {
 		ThreadsID []uint `json:"likes"`
 	}
 
-	if err := c.Bind(&body); err != nil {
-		errorLog.LogError(err)
-
+	if err := c.Bind(&body); errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -45,9 +43,7 @@ func LikeThreadsHandler(c *gin.Context) {
 			err = repository.UpdateThreadLikeBy(body.ThreadsID[i], user.ID, false)
 		}
 
-		if err != nil {
-			errorLog.LogError(err)
-
+		if errorLog.ErrorHandler(err) != nil {
 			c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 			return
@@ -57,9 +53,7 @@ func LikeThreadsHandler(c *gin.Context) {
 	user.Likes = body.ThreadsID
 	err := repository.UpdateUser(user)
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return

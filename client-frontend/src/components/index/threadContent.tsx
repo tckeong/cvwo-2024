@@ -14,7 +14,7 @@ export interface Props {
     content: contentProps;
 }
 
-function PostContent(props: Props) {
+function ThreadContent(props: Props) {
     const { img, content } = props;
 
     return (
@@ -41,4 +41,4 @@ function PostContent(props: Props) {
     )
 }
 
-export default PostContent;
+export default ThreadContent;

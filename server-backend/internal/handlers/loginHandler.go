@@ -24,9 +24,7 @@ func LoginHandler(c *gin.Context) {
 		Password string `json:"password" binding:"required"`
 	}
 
-	if err := c.Bind(&body); err != nil {
-		errorLog.LogError(err)
-
+	if err := c.Bind(&body); errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -35,9 +33,7 @@ func LoginHandler(c *gin.Context) {
 	// check if the username and password is valid
 	user, err := repository.SearchUserByName(body.Username)
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid username", err, nil))
 
 		return
@@ -46,7 +42,7 @@ func LoginHandler(c *gin.Context) {
 	// compare the password with the saved password
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
 
-	if err != nil {
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid password", err, nil))
 
 		return
@@ -60,9 +56,7 @@ func LoginHandler(c *gin.Context) {
 
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusInternalServerError, messages.ReturnMessage("Failed to generate token", err, nil))
 
 		return

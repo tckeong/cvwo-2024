@@ -7,13 +7,13 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useNavigate } from "react-router-dom";
 
 interface Props {
-    postId: string | undefined;
+    threadID: string | undefined;
 }
 
 let initState: boolean = true;
 
-function EditPost(props: Props) {
-    const { postId } = props;
+function EditThread(props: Props) {
+    const { threadID } = props;
     const pageTitle = "Edit Post";
 
     const [titleState, setTitleState] = useState<string>("");
@@ -26,6 +26,11 @@ function EditPost(props: Props) {
 
     const [tags, setTags] = useState<string[]>([]);
 
+    /**
+     * handleChange for tags select
+     *  
+     * can only select up to 3 tags
+     */
     const handleChange = (event: SelectChangeEvent<typeof tags>) => {
         const { target: { value } } = event;
         if(typeof value === 'string') {
@@ -44,33 +49,40 @@ function EditPost(props: Props) {
           // On autofill we get a stringified value.
           typeof value === 'string' ? value.split(',') : value,
         );
-      };
+    };
 
-      const tagsCheck = (tag: string) : boolean => {
-            if(!initState) {
-                return false;
-            }
-
-            if(tags) {
-                let temp: number = -1;
-
-                for(let i = 0; i < tags.length; i++) {
-                    const index = tagsList.indexOf(tags[i]);
-                    if (tags[index] === tag) {
-                        temp = index;
-                        break;
-                    }
-                }
-
-                if(tagsList.indexOf(tag) === tagsList.length - 1) {
-                    initState = false;
-                }
-
-                return temp !== -1;
-            }
+    /**
+     * tagsCheck for checking if the tag is in the tags list
+     * it only check when the initState is true
+     * which means it only check when the component is first rendered
+     */
+    const tagsCheck = (tag: string) : boolean => {
+        if(!initState) {
             return false;
-      }
+        }
 
+        if(tags) {
+            let temp: number = -1;
+
+            for(let i = 0; i < tags.length; i++) {
+                const index = tagsList.indexOf(tags[i]);
+                if (tags[index] === tag) {
+                    temp = index;
+                    break;
+                }
+            }
+
+            if(tagsList.indexOf(tag) === tagsList.length - 1) {
+                initState = false;
+            }
+
+            return temp !== -1;
+        }
+        return false;
+    }
+
+    // handleSubmit for submit button
+    // send post request to backend with the edited post content
     const handleSubmit = () => {
         fetch(`${API_URL}thread`, {
             method: "PUT",
@@ -79,7 +91,7 @@ function EditPost(props: Props) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                post_id: parseInt(postId ? postId : "-1", 10),
+                post_id: parseInt(threadID ? threadID : "-1", 10),
                 title: titleState,
                 content: contentState,
                 img_link: imgLinkState,
@@ -100,9 +112,9 @@ function EditPost(props: Props) {
     }
 
 
-    // loading the post data from the server according to the post Id
+    // loading the post data from the server according to the threadID
     useEffect(() => {
-        fetch(`${API_URL}thread/${postId}`, {
+        fetch(`${API_URL}thread/${threadID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -119,7 +131,7 @@ function EditPost(props: Props) {
         }).catch(err => {
             console.log(err);
         })
-    }, [postId]);
+    }, [threadID]);
 
     return (
         <div className="content" style={{overflowY: "scroll"}}>
@@ -169,4 +181,4 @@ function EditPost(props: Props) {
     );
 }
 
-export default EditPost;
+export default EditThread;

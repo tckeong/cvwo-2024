@@ -3,17 +3,19 @@ import ShareIcon from '@mui/icons-material/Share';
 import { useState } from "react";
 
 interface Props {
-    index: number;
+    threadID: number;
 }
 
+const url = import.meta.env.VITE_REACT_APP_URL;;
+
 function ShareButton(props: Props) {
-    const { index } = props;
+    const { threadID } = props;
 
     const [open, setOpen] = useState<boolean>(false);
 
     const handleShare = () => {
         setOpen(true);
-        navigator.clipboard.writeText(`http://localhost:5173/post/${index}`).catch(err => console.log(err));
+        navigator.clipboard.writeText(`${url}post/${threadID}`).catch(err => console.log(err));
     }
 
     const handleClose = (_?: React.SyntheticEvent | Event, reason?: string) => {

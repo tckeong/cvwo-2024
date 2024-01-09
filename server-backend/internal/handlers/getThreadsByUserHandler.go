@@ -15,9 +15,7 @@ func GetThreadsByUserHandler(c *gin.Context) {
 
 	threadsID, err := repository.GetThreadsIDByAuthorID(user.ID)
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return

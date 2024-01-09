@@ -4,25 +4,25 @@ import Favorite from '@mui/icons-material/Favorite';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useEffect, useState } from "react";
 import API_URL from "../../api/apiConfig";
-import { PostType } from "../index/post";
+import { ThreadType } from "../index/thread";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { like, unlike } from "../interact/likeInteract";
 import ShareButton from "../interact/shareButton";
 
 interface Props {
-    postID: number;
+    threadID: number;
     liked: boolean;
 }
 
 interface PropsPopper {
     handleClose: () => void;
     anchorEl: HTMLButtonElement | null;
-    postID: number;
+    threadID: number;
 }
 
-function MyPostPopper(props: PropsPopper) {
-    const { handleClose, anchorEl, postID } = props;
+function MyThreadPopper(props: PropsPopper) {
+    const { handleClose, anchorEl, threadID } = props;
     const navigate = useNavigate();
 
     const open = Boolean(anchorEl);
@@ -31,7 +31,7 @@ function MyPostPopper(props: PropsPopper) {
     return (
         <Popover id={id} anchorEl={anchorEl} onClose={handleClose} open={open} anchorOrigin={{vertical: "bottom", horizontal: "left"}} >
             <div style={{display: "flex", flexDirection: "column"}}>
-                <Button variant="contained" size='small' onClick={() =>navigate(`/edit/${postID}`)} >
+                <Button variant="contained" size='small' onClick={() =>navigate(`/edit/${threadID}`)} >
                     Edit
                 </Button>
                 <Button variant="contained" color="error" size='small'>
@@ -42,14 +42,14 @@ function MyPostPopper(props: PropsPopper) {
     );
 }
 
-function MyPost(props: Props) {
-    const { postID, liked } = props;
-    const [content, setContent] = useState<PostType | undefined>(undefined);
+function MyThread(props: Props) {
+    const { threadID, liked } = props;
+    const [content, setContent] = useState<ThreadType | undefined>(undefined);
     const [checked, setChecked] = useState<boolean>(liked);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        fetch(`${API_URL}thread/${postID}`, {
+        fetch(`${API_URL}thread/${threadID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -78,9 +78,9 @@ function MyPost(props: Props) {
     const handleLike = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
         if(event.target.checked) {
-            dispatch(like({index: postID}));
+            dispatch(like({index: threadID}));
         } else {
-            dispatch(unlike({index: postID}));
+            dispatch(unlike({index: threadID}));
         }
     }
 
@@ -94,16 +94,16 @@ function MyPost(props: Props) {
                     </IconButton>
                 }
             />
-            <MyPostPopper handleClose={handleClose} anchorEl={anchorEl} postID={postID} />
+            <MyThreadPopper handleClose={handleClose} anchorEl={anchorEl} threadID={threadID} />
             <Box className="post-detail" >
                 <Typography component="div" variant="h4" sx={{paddingLeft: "1.5rem"}}>
                         {content?.title}
                 </Typography>
                 <Box className="post-detail-content">
-                    {(content?.imgLink !== "") && <CardMedia
+                    {(content?.img_link !== "") && <CardMedia
                         component="img"
                         sx={{ width: "5rem", height: "5rem", objectFit: "contain" }}
-                        image={content?.imgLink}
+                        image={content?.img_link}
                         alt="apple"
                         className="card-img"
                         style={{alignSelf: "center", justifySelf: "center"}}
@@ -128,10 +128,10 @@ function MyPost(props: Props) {
             </Box>
             <CardActions disableSpacing sx={{marginLeft: "0.25rem"}}>
                 <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={checked} onChange={handleLike} />
-                <ShareButton index={postID} />
+                <ShareButton threadID={threadID} />
             </CardActions>
         </Card>
     );
 }
 
-export default MyPost;
+export default MyThread;

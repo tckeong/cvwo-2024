@@ -21,6 +21,11 @@ function SignUp() {
             return;
         }
 
+        if (username.length === 0 || password.length === 0 || confirmPassword.length === 0) {
+            alert("Please fill in all the fields!");
+            return;
+        }
+
         fetch(`${API_URL}signup`, {
             method: "POST",
             headers: {

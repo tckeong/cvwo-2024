@@ -2,20 +2,28 @@ package repository
 
 import (
 	"github.com/tckeong/cvwo-2024/internal/models"
+	"github.com/tckeong/cvwo-2024/internal/repository/configs"
 )
 
-func GetAllThreads() ([]models.Thread, error) {
-	var threads []models.Thread
-	err := DB.Find(&threads).Error
+// GetAllThreads is a function that returns all the threads in the database.
+func GetAllThreads() (*[]models.Thread, error) {
+	threads := new([]models.Thread)
+	err := configs.DB.Find(threads).Error
 	return threads, err
 }
 
+// GetAllThreadsID is a function that returns all the threads' ID in the database.
+// It call GetAllThreads() and then extract the ID from the threads.
 func GetAllThreadsID() ([]uint, error) {
-	threads, err := GetAllThreads()
+	Threads, err := GetAllThreads()
 
 	if err != nil {
 		return nil, err
 	}
+
+	// Threads *[]models.Thread
+	// threads []models.Thread
+	threads := *Threads
 
 	threadsID := make([]uint, len(threads))
 
@@ -26,24 +34,32 @@ func GetAllThreadsID() ([]uint, error) {
 	return threadsID, nil
 }
 
-func GetThreadByID(id uint) (models.Thread, error) {
-	var thread models.Thread
-	err := DB.First(&thread, id).Error
+// GetThreadByID is a function that returns a thread with the given ID.
+func GetThreadByID(id uint) (*models.Thread, error) {
+	thread := new(models.Thread)
+	err := configs.DB.First(thread, id).Error
 	return thread, err
 }
 
-func GetThreadsByAuthorID(authorID uint) ([]models.Thread, error) {
-	var threads []models.Thread
-	err := DB.Where("author_id = ?", authorID).Find(&threads).Error
+// GetThreadsByAuthorID is a function that returns all the threads with the given author ID.
+func GetThreadsByAuthorID(authorID uint) (*[]models.Thread, error) {
+	threads := new([]models.Thread)
+	err := configs.DB.Where("author_id = ?", authorID).Find(threads).Error
 	return threads, err
 }
 
+// GetThreadsIDByAuthorID is a function that returns all the threads' ID with the given author ID.
+// It calls GetThreadsByAuthorID() and then extract the ID from the threads.
 func GetThreadsIDByAuthorID(authorID uint) ([]uint, error) {
-	threads, err := GetThreadsByAuthorID(authorID)
+	Threads, err := GetThreadsByAuthorID(authorID)
 
 	if err != nil {
 		return nil, err
 	}
+
+	// Threads *[]models.Thread
+	// threads []models.Thread
+	threads := *Threads
 
 	threadsID := make([]uint, len(threads))
 
@@ -54,7 +70,8 @@ func GetThreadsIDByAuthorID(authorID uint) ([]uint, error) {
 	return threadsID, nil
 }
 
-func GetThreadsByKeywords(keywords *[]string) ([]models.Thread, error) {
+// GetThreadsByKeywords is a function that returns all the threads with the given keywords.
+func GetThreadsByKeywords(keywords *[]string) (*[]models.Thread, error) {
 	keywordArray := *keywords
 	query := ""
 
@@ -68,17 +85,23 @@ func GetThreadsByKeywords(keywords *[]string) ([]models.Thread, error) {
 		}
 	}
 
-	var threads []models.Thread
-	err := DB.Where(query).Find(&threads).Error
+	threads := new([]models.Thread)
+	err := configs.DB.Where(query).Find(threads).Error
 	return threads, err
 }
 
+// GetThreadsIDByKeywords is a function that returns all the threads' ID with the given keywords.
+// It calls GetThreadsByKeywords() and then extract the ID from the threads.
 func GetThreadsIDByKeywords(keywords *[]string) ([]uint, error) {
-	threads, err := GetThreadsByKeywords(keywords)
+	Threads, err := GetThreadsByKeywords(keywords)
 
 	if err != nil {
 		return nil, err
 	}
+
+	// Threads *[]models.Thread
+	// threads []models.Thread
+	threads := *Threads
 
 	threadsID := make([]uint, len(threads))
 
@@ -89,8 +112,9 @@ func GetThreadsIDByKeywords(keywords *[]string) ([]uint, error) {
 	return threadsID, nil
 }
 
+// CreateThread is a function that creates a thread with the given parameters.
 func CreateThread(title, content, imgLink string, tags string, authorID uint, authorName string) error {
-	thread := models.Thread{
+	thread := &models.Thread{
 		Title:      title,
 		Content:    content,
 		ImgLink:    imgLink,
@@ -99,28 +123,25 @@ func CreateThread(title, content, imgLink string, tags string, authorID uint, au
 		AuthorName: authorName,
 	}
 
-	return DB.Create(&thread).Error
+	return configs.DB.Create(thread).Error
 }
 
+// UpdateThread is a function that updates a thread with the given parameters.
 func UpdateThread(id uint, title, content, imgLink string, tags string) error {
-	thread, err := GetThreadByID(id)
-
-	if err != nil {
-		return err
+	thread := models.Thread{
+		Title:   title,
+		Content: content,
+		ImgLink: imgLink,
+		Tags:    tags,
 	}
 
-	thread.Title = title
-	thread.Content = content
-	thread.ImgLink = imgLink
-	thread.Tags = tags
-
-	return DB.Save(&thread).Error
-
+	return configs.DB.Model(&models.Thread{}).Where("id = ?", id).Updates(thread).Error
 }
 
+// UpdateThreadLikeBy is a function that updates a thread's likedBy with the given parameters.
 func UpdateThreadLikeBy(threadID uint, userID uint, delete bool) error {
 	thread, err := GetThreadByID(threadID)
-	newLikedBy := make([]uint, 0)
+	newLikedBy := make([]uint, 0, len(thread.LikedBy))
 
 	if err != nil {
 		return err
@@ -128,6 +149,7 @@ func UpdateThreadLikeBy(threadID uint, userID uint, delete bool) error {
 
 	if delete {
 		for i := range thread.LikedBy {
+			// If the user is the one that is deleting the like, skip it.
 			if thread.LikedBy[i] == userID {
 				continue
 			}
@@ -135,15 +157,18 @@ func UpdateThreadLikeBy(threadID uint, userID uint, delete bool) error {
 			newLikedBy = append(newLikedBy, thread.LikedBy[i])
 		}
 	} else {
+		// Check if the user has already liked the thread.
 		flag := true
 
 		for i := range thread.LikedBy {
+			// If the user has already liked the thread, skip it.
 			if thread.LikedBy[i] == userID {
 				flag = false
 				break
 			}
 		}
 
+		// If the user has not liked the thread, append the user to the likedBy.
 		if flag {
 			newLikedBy = append(thread.LikedBy, userID)
 		}
@@ -151,10 +176,10 @@ func UpdateThreadLikeBy(threadID uint, userID uint, delete bool) error {
 
 	thread.LikedBy = newLikedBy
 
-	return DB.Save(&thread).Error
+	return configs.DB.Save(&thread).Error
 }
 
+// DeleteThread is a function that deletes a thread with the given ID.
 func DeleteThread(id uint) error {
-	return DB.Delete(&models.Thread{}, id).Error
-
+	return configs.DB.Delete(&models.Thread{}, id).Error
 }

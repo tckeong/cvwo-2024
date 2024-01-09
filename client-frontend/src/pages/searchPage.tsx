@@ -1,6 +1,6 @@
 import { Box, List, Typography } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
-import Post from "../components/index/post";
+import Post from "../components/index/thread";
 import SortedType from "../components/index/sortedType";
 import Layout from "./layout";
 import { useEffect, useState } from "react";

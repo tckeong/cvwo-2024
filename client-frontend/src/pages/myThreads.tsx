@@ -1,5 +1,5 @@
 import { Divider, Typography } from "@mui/material";
-import MyPost from "../components/myPosts/myPost";
+import MyThread from "../components/myThreads/myThread";
 import Layout from "./layout";
 import { Box } from "@mui/material";
 import Cookies from "js-cookie";
@@ -8,11 +8,11 @@ import API_URL from "../api/apiConfig";
 import { useSelector } from "react-redux";
 import { RootState } from "../components/interact/likeInteract";
 
-function MyPosts() {
+function MyThreads() {
     const username = Cookies.get("username");
     const userID = Cookies.get("userId");
 
-    const [postID, setPostID] = useState<number[]>([]);
+    const [threadID, setThreadID] = useState<number[]>([]);
     const [likes, setLikes] = useState<number[]>([]);
     const likeStore = useSelector((state: RootState) => state.like.value);
 
@@ -26,7 +26,7 @@ function MyPosts() {
         }).then(response => {
             if (response.ok) {
                 response.json().then(data => {
-                    setPostID(data.value);
+                    setThreadID(data.value);
                 });
             }
         }).catch(err => {
@@ -45,12 +45,12 @@ function MyPosts() {
                 <Divider />
                 <Box sx={{marginLeft: "0.5rem", marginRight: "0.5rem"}}>
                     { 
-                        (postID.length === 0)
+                        (threadID.length === 0)
                         ? ( <Typography variant="h4" component="div" sx={{fontWeight: "bold", alignSelf: "center", margin: "2rem", marginLeft: "3rem"}}>
                                 no posts found
                             </Typography>)
-                        : postID.map((index) => {
-                            return <MyPost key={index} postID={index} liked={likes.find(id => id === index) === index} />
+                        : threadID.map((index) => {
+                            return <MyThread key={index} threadID={index} liked={likes.find(id => id === index) === index} />
                         })
                     }
                 </Box>
@@ -59,4 +59,4 @@ function MyPosts() {
     );
 }
 
-export default MyPosts;
+export default MyThreads;

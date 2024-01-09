@@ -22,7 +22,7 @@ func EditThreadHandler(c *gin.Context) {
 	}
 
 	if err := c.Bind(&body); err != nil {
-		errorLog.LogError(err)
+		_ = errorLog.ErrorHandler(err)
 
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
@@ -33,11 +33,10 @@ func EditThreadHandler(c *gin.Context) {
 
 	thread, err := repository.GetThreadByID(body.PostID)
 
-	if err != nil || curUser.ID != thread.AuthorID {
+	if errorLog.ErrorHandler(err) != nil || curUser.ID != thread.AuthorID {
 		if err == nil {
-			errorLog.LogError(errors.New("user is not the author of the thread"))
-		} else {
-			errorLog.LogError(err)
+			err := errors.New("user is not the author of the thread")
+			_ = errorLog.ErrorHandler(err)
 		}
 
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
@@ -48,9 +47,7 @@ func EditThreadHandler(c *gin.Context) {
 	// update the thread
 	err = repository.UpdateThread(body.PostID, body.Title, body.Content, body.ImgLink, body.Tags)
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return

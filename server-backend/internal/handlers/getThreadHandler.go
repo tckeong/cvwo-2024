@@ -11,13 +11,10 @@ import (
 
 // GetThreadHandler handles the GET request to /thread/:thread_id.
 // accept the thread id and return the relevant thread
-// request body: { thread_id }
 func GetThreadHandler(c *gin.Context) {
 	threadID, err := strconv.ParseUint(c.Param("thread_id"), 10, 64)
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -25,9 +22,7 @@ func GetThreadHandler(c *gin.Context) {
 
 	thread, err := repository.GetThreadByID(uint(threadID))
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return

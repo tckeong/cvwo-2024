@@ -17,9 +17,7 @@ func AddCommentHandler(c *gin.Context) {
 		Content  string `json:"content"`
 	}
 
-	if err := c.Bind(&body); err != nil {
-		errorLog.LogError(err)
-
+	if err := c.Bind(&body); errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -29,9 +27,7 @@ func AddCommentHandler(c *gin.Context) {
 
 	err := repository.CreateComment(body.Content, author.Username, author.ID, body.ThreadID)
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return

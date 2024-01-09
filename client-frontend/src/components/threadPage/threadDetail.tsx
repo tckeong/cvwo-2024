@@ -6,14 +6,14 @@ import CardActions from '@mui/material/CardActions';
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
-import { PostType } from '../index/post';
+import { ThreadType } from '../index/thread';
 import ShareButton from '../interact/shareButton';
 import { Typography } from "@mui/material";
 import { Box } from "@mui/material";
 import { CardMedia } from "@mui/material";
 import { CardContent } from "@mui/material";
-import { Props } from '../index/postContent';
-import { FormatDate } from '../index/post';
+import { Props } from '../index/threadContent';
+import { FormatDate } from '../index/thread';
 import { useState } from 'react';
 import "../css/postDetail.css"
 import Cookies from 'js-cookie';
@@ -22,11 +22,11 @@ import { like, unlike } from '../interact/likeInteract';
 import { useNavigate } from 'react-router-dom';
 import { Link } from '@mui/material';
 
-function PostContent(props: Props) {
+function ThreadContent(props: Props) {
     const { img, content } = props;
 
     return (
-        <Box className="post-detail" >
+        <Box className="thread-detail" >
             <Typography component="div" variant="h4" sx={{paddingLeft: "1rem"}}>
                     {content.title}
             </Typography>
@@ -50,16 +50,16 @@ function PostContent(props: Props) {
     )
 }
 
-interface PostDetailProps {
-    post: PostType | undefined;
+interface ThreadDetailProps {
+    thread: ThreadType | undefined;
     liked: boolean;
 }
 
-function PostDetail(props: PostDetailProps) {
-    const { post, liked } = props;
+function PostDetail(props: ThreadDetailProps) {
+    const { thread, liked } = props;
     const [checked, setChecked] = useState<boolean>(liked);
     const dispatch = useDispatch();
-    const index = post ? post.ID : -1;
+    const threadID = thread ? thread.ID : -1;
     const navigate = useNavigate();
     
     const handleLike = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,9 +71,9 @@ function PostDetail(props: PostDetailProps) {
         
         setChecked(event.target.checked);
         if(event.target.checked) {
-            dispatch(like({index: index}));
+            dispatch(like({index: threadID}));
         } else {
-            dispatch(unlike({index: index}));
+            dispatch(unlike({index: threadID}));
         }
     }
 
@@ -86,12 +86,12 @@ function PostDetail(props: PostDetailProps) {
                     <Icon icon="oi:person" />
                 </Avatar>
                 }
-                title={post?.authorName}
-                subheader={FormatDate(post ? post.CreatedAt : "")}
+                title={thread?.author_name}
+                subheader={FormatDate(thread ? thread.CreatedAt : "")}
             />
-            <PostContent img={post?.imgLink} content={{title: post?.title, content: post?.content}}/>
+            <ThreadContent img={thread?.img_link} content={{title: thread?.title, content: thread?.content}}/>
             <Box sx={{display: "flex", flexDirection: "row"}}>
-                {post?.tags.split(",").map((tag) => {
+                {thread?.tags.split(",").map((tag) => {
                     return (
                     <Link onClick={() => navigate(`/search/?keywords=${tag}`)} underline='hover' sx={{color: "#000000"}} >
                         <Typography key={tag} variant="subtitle1" color="text.secondary" component="div" sx={{paddingLeft: "1.5rem"}}>
@@ -102,7 +102,7 @@ function PostDetail(props: PostDetailProps) {
             </Box>
             <CardActions disableSpacing sx={{marginLeft: "0.25rem"}}>
                 <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={checked} onChange={handleLike} />
-                <ShareButton index={post ? post.ID : -1} />
+                <ShareButton threadID={thread ? thread.ID : -1} />
             </CardActions>
         </Card>
     );

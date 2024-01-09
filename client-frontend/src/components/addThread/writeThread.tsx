@@ -10,7 +10,12 @@ import "../css/writePost.css"
 import API_URL from "../../api/apiConfig";
 import { TagsLabel } from "../tags/tags";
 
-function WritePost() {
+/**
+ * Renders the WritePost component.
+ * 
+ * @returns JSX.Element representing the WritePost component.
+ */ 
+function WriteThread() {
     const username = Cookies.get("username") || "";
 
     const pageTitle = `Create Post as ${username}`;
@@ -18,13 +23,17 @@ function WritePost() {
     const [titleState, setTitleState] = useState<string>("");
     const [contentState, setContentState] = useState<string>("");
     const [imgLinkState, setImgLinkState] = useState<string>("");
+    const [tags, setTags] = useState<string[]>([]);
 
     const tagsList = TagsLabel;
 
     const navigate = useNavigate();
 
-    const [tags, setTags] = useState<string[]>([]);
-
+    /**  
+     * handleChange for tags select
+     * 
+     * can only select up to 3 tags
+     */
     const handleChange = (event: SelectChangeEvent<typeof tags>) => {
         const { target: { value } } = event;
         if(typeof value === 'string') {
@@ -45,6 +54,11 @@ function WritePost() {
         );
       };
 
+    /**
+     * handleSubmit for submit button
+     * 
+     * send post request to backend with the post content
+     */
       const handleSubmit = () => {
         fetch(`${API_URL}thread`, {
             method: "POST",
@@ -121,4 +135,4 @@ function WritePost() {
     );
 }
 
-export default WritePost;
+export default WriteThread;

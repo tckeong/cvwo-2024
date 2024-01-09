@@ -9,6 +9,7 @@ var (
 	Logger *log.Logger
 )
 
+// LoggerInit is a public method that initializes the logger.
 func LoggerInit() {
 	filePath := "./log/error.log"
 
@@ -21,6 +22,14 @@ func LoggerInit() {
 	Logger = log.New(file, "ERROR: ", log.Ldate|log.Ltime|log.LstdFlags|log.Lshortfile)
 }
 
-func LogError(err error) {
-	Logger.Println(err.Error())
+// ErrorHandler is a public method that handles errors.
+// It will accept an error, if it is not nil, it will log the error.
+// If it is nil, it will do nothing.
+// Finally, it will return the error.
+func ErrorHandler(err error) error {
+	if err != nil {
+		Logger.Println(err)
+	}
+
+	return err
 }

@@ -16,9 +16,7 @@ func SearchThreadsHandler(c *gin.Context) {
 		Keywords string `json:"keywords"`
 	}
 
-	if err := c.Bind(&body); err != nil {
-		errorLog.LogError(err)
-
+	if err := c.Bind(&body); errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -29,9 +27,7 @@ func SearchThreadsHandler(c *gin.Context) {
 
 	threadsID, err := repository.GetThreadsIDByKeywords(&keywords)
 
-	if err != nil {
-		errorLog.LogError(err)
-		
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusInternalServerError, messages.ReturnMessage("Get threads error", err, nil))
 
 		return

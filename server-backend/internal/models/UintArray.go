@@ -8,10 +8,11 @@ import (
 	"strings"
 )
 
-// IntArray represents an array of integers for PostgreSQL
+// UintArray IntArray represents an array of integers for PostgreSQL.
 type UintArray []uint
 
-// Value converts the IntArray to a format that can be stored in the database
+// Value converts the UintArray to a format that can be stored in the database.
+// It converts the uint array to the string format.
 func (uintArray UintArray) Value() (driver.Value, error) {
 	result := ""
 
@@ -25,7 +26,8 @@ func (uintArray UintArray) Value() (driver.Value, error) {
 	return result, nil
 }
 
-// Scan converts the database representation to an IntArray
+// Scan converts the database representation to an IntArray.
+// It converts the string format to the uint array.
 func (uintArray *UintArray) Scan(value interface{}) error {
 	if value == nil {
 		*uintArray = nil
@@ -40,13 +42,11 @@ func (uintArray *UintArray) Scan(value interface{}) error {
 	tempString = strings.Trim(tempString, "{}")
 
 	for _, v := range strings.Split(tempString, ",") {
-		temp := string(v)
-
-		if temp == "" {
+		if v == "" {
 			continue
 		}
 
-		value, err := strconv.ParseUint(temp, 10, 64)
+		value, err := strconv.ParseUint(v, 10, 64)
 
 		if err != nil {
 			return err

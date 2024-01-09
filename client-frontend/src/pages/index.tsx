@@ -1,10 +1,10 @@
 import Layout from "./layout";
-import PostList from "../components/index/postList";
+import ThreadList from "../components/index/threadList";
 
 function Index() {
     return (
       <Layout>
-        <PostList />
+        <ThreadList />
       </Layout>
     );
 }

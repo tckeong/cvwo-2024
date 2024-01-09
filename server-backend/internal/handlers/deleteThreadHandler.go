@@ -17,9 +17,7 @@ func DeleteThreadHandler(c *gin.Context) {
 		ThreadID uint `json:"thread_id"`
 	}
 
-	if err := c.Bind(&body); err != nil {
-		errorLog.LogError(err)
-
+	if err := c.Bind(&body); errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -28,11 +26,10 @@ func DeleteThreadHandler(c *gin.Context) {
 	curUser := c.Keys["user"].(*models.User)
 	thread, err := repository.GetThreadByID(body.ThreadID)
 
-	if err != nil || curUser.ID != thread.AuthorID {
+	if errorLog.ErrorHandler(err) != nil || curUser.ID != thread.AuthorID {
 		if err == nil {
-			errorLog.LogError(errors.New("user is not the author of the thread"))
-		} else {
-			errorLog.LogError(err)
+			err := errors.New("user is not the author of the thread")
+			_ = errorLog.ErrorHandler(err)
 		}
 
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
@@ -42,9 +39,7 @@ func DeleteThreadHandler(c *gin.Context) {
 
 	err = repository.DeleteThread(body.ThreadID)
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return

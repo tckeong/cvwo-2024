@@ -1,5 +1,5 @@
 import Layout from "./layout";
-import WritePost from "../components/addPost/writePost";
+import WriteThread from "../components/addThread/writeThread";
 import Cookies from "js-cookie";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +20,7 @@ function AddPost() {
 
     return (
         <Layout>
-            <WritePost edit={false} />
+            <WriteThread />
         </Layout>
     );
 }

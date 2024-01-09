@@ -3,7 +3,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Avatar from '@mui/material/Avatar';
 import { Icon } from '@iconify/react';
 import CardActions from '@mui/material/CardActions';
-import PostContent from './postContent';
+import PostContent from './threadContent';
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
@@ -16,20 +16,24 @@ import { useDispatch } from 'react-redux';
 import { like, unlike } from '../interact/likeInteract';
 import ShareButton from '../interact/shareButton';
 
-export type PostType = {
+export type ThreadType = {
     ID: number;
     CreatedAt: string;
     UpdatedAt: string;
     DeletedAt: string;
-    authorID: number;
-    authorName: string;
+    author_id: number;
+    author_name: string;
     title: string;
     content: string;
-    imgLink: string;
+    img_link: string;
     tags: string;
-    likedBy: string;
+    liked_by: string;
 }
 
+/**
+ * @param date 
+ * @returns string of the date in format: Month Day, Year
+ */
 export function FormatDate(date: string): string {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(date).toLocaleDateString('en-US', options);
@@ -41,14 +45,16 @@ interface Props {
     liked: boolean
 }
 
-function Post(props: Props) {
+
+function Thread(props: Props) {
     const { index, handleClick, liked } = props;
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const [post, setPost] = useState<PostType | undefined>(undefined);
+    const [thread, setThread] = useState<ThreadType | undefined>(undefined);
     const [checked, setChecked] = useState<boolean>(liked);
 
+    // fetch the post data from the server
     useEffect(() => {
         fetch(`${API_URL}thread/${index}`, {
             method: "GET",
@@ -58,7 +64,7 @@ function Post(props: Props) {
         }).then(response => {
             if (response.ok) {
                 response.json().then(data => {
-                    setPost(data.value);
+                    setThread(data.value);
                 });
             }
         }).catch(err => {
@@ -67,6 +73,11 @@ function Post(props: Props) {
 
     }, [index]);
 
+    /** 
+     * handleLike for like button.
+     * detect the change of the like button.
+     * set the like status of the post in redux store.
+     */
     const handleLike = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (Cookies.get("userId") === undefined) {
             alert("Please login to like this post!");
@@ -95,17 +106,17 @@ function Post(props: Props) {
                         <Icon icon="oi:person" />
                     </Avatar>
                     }
-                    title={post?.authorName}
-                    subheader={post ? FormatDate(post.CreatedAt) : ""}
+                    title={thread?.author_name}
+                    subheader={thread ? FormatDate(thread.CreatedAt) : ""}
                 />
-                <PostContent img={post?.imgLink} content={{title: post?.title, content: post?.content}} />
+                <PostContent img={thread?.img_link} content={{title: thread?.title, content: thread?.content}} />
             </CardActionArea>
             <CardActions disableSpacing >
                 <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={checked} onChange={handleLike}/>
-                <ShareButton index={index} />
+                <ShareButton threadID={index} />
             </CardActions>
         </Card>
     );
 }
 
-export default Post;
+export default Thread;

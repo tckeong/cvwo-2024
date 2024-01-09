@@ -1,4 +1,4 @@
-import Post from './post';
+import Post from './thread';
 import { Box, Typography } from "@mui/material";
 import List from '@mui/material/List';
 import { useNavigate } from 'react-router-dom';
@@ -10,13 +10,13 @@ import { useDispatch } from 'react-redux';
 import { RootState, like } from '../interact/likeInteract';
 import { useSelector } from 'react-redux';
 
-function PostList() {
+function ThreadList() {
     const navigate = useNavigate();
     const userID = Cookies.get("userId");
+    const dispatch = useDispatch();
 
     const [result, setResult] = useState<number[]>([]);
     const [likes, setLikes] = useState<number[]>([]);
-    const dispatch = useDispatch();
     const likeStore = useSelector((state: RootState) => state.like.value);
 
     useEffect(() => {
@@ -31,8 +31,16 @@ function PostList() {
             console.log(err);
         })
 
+        /**
+         * fetch the likes data from the server
+         * if the user is logged in and the likeStore is empty
+         * and set the like to the redux store
+         */
         if(userID !== undefined && likeStore.length === 0) {
-            fetch(`${API_URL}like/${userID}`)
+            fetch(`${API_URL}like`, {
+                method: "GET",
+                credentials: "include",
+            })
             .then(response => {
                 if (response.ok) {
                     response.json().then(data => {
@@ -72,7 +80,7 @@ function PostList() {
                     </Typography>)
                 : result.map((index) => {
                     return <Post key={index} index={index}
-                            handleClick={(index) => navigate("/post/" + index)} liked={likes.find(id => id === index) === index} />
+                            handleClick={(index) => navigate("/thread/" + index)} liked={likes.find(id => id === index) === index} />
                 })
             }
         </List>
@@ -80,4 +88,4 @@ function PostList() {
     );
 }
 
-export default PostList;
+export default ThreadList;

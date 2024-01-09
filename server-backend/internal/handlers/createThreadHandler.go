@@ -19,9 +19,7 @@ func CreateThreadHandler(c *gin.Context) {
 		Tags    string `json:"tags"`
 	}
 
-	if err := c.Bind(&body); err != nil {
-		errorLog.LogError(err)
-
+	if err := c.Bind(&body); errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -32,9 +30,7 @@ func CreateThreadHandler(c *gin.Context) {
 	// create the thread
 	err := repository.CreateThread(body.Title, body.Content, body.ImgLink, body.Tags, author.ID, author.Username)
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return

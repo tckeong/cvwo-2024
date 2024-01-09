@@ -1,27 +1,28 @@
 import {useParams} from 'react-router-dom';
-import PostDetail from '../components/postPage/postDetail';
-import RecommendBar from '../components/postPage/recommendBar';
-import PostComment from '../components/postPage/postComment';
+import ThreadDetail from '../components/threadPage/threadDetail';
+import RecommendBar from '../components/threadPage/recommendBar';
+import ThreadComment from '../components/threadPage/threadComments';
 import Layout from './layout';
 import "./css/style.css"
 import {Box} from "@mui/material";
 import {Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import API_URL from "../api/apiConfig";
-import { PostType } from '../components/index/post';
+import { ThreadType } from '../components/index/thread';
 import {useSelector } from 'react-redux';
 import { RootState } from '../components/interact/likeInteract';
 
-function PostPage() {
-    const {postId} = useParams<{postId: string}>();
-    const [post, setPost] = useState<PostType | undefined>(undefined);
+function ThreadPage() {
+    const {thread_id} = useParams<string>();
+    const [thread, setThread] = useState<ThreadType | undefined>(undefined);
     const [likes, setLikes] = useState<number[]>([]);
-   const likeStore = useSelector((state: RootState) => state.like.value);
+    const likeStore = useSelector((state: RootState) => state.like.value);
 
-    const index = parseInt(postId ? postId : "-1", 10);
+
+    const threadID: number = parseInt(thread_id ? thread_id : "-1", 10);
 
     useEffect(() => {
-        fetch(`${API_URL}thread/${postId}`, {
+        fetch(`${API_URL}thread/${threadID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -29,7 +30,7 @@ function PostPage() {
         }).then(response => {
             if (response.ok) {
                 response.json().then(data => {
-                    setPost(data.value);
+                    setThread(data.value);
                 });
             }
         }).catch(err => {
@@ -37,20 +38,20 @@ function PostPage() {
         })
 
         setLikes(likeStore);
-    }, [index]);   
+    }, [threadID]);   
 
 
     return (
         <Layout>
             <Box className="content" sx={{overflowY: "hidden", backgroundColor: "#F8F8FF"}}>
-                {(post !== undefined)
+                {(thread !== undefined)
                 ? ( <Box className="post-page-content">
                         <Box className="post-content" sx={{overflowY: "scroll"}}>
-                            <PostDetail post={post} liked={likes.find(id => id === index) === index} />
-                            <PostComment postID={post.ID} />
+                            <ThreadDetail thread={thread} liked={likes.find(id => id === threadID) === threadID} />
+                            <ThreadComment threadID={threadID} />
                         </Box>
                         <Box className="recommend-bar" sx={{overflowY: "scroll"}}>
-                            <RecommendBar tags={post.tags} />
+                            <RecommendBar curThreadID={threadID} tags={thread.tags} />
                         </Box>
                     </Box>)
                 : ( <Typography variant="h4" component="div" sx={{fontWeight: "bold", alignSelf: "center", margin: "2rem", marginLeft: "3rem"}}>
@@ -62,4 +63,4 @@ function PostPage() {
     );
 }
 
-export default PostPage;
+export default ThreadPage;

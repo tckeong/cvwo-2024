@@ -4,21 +4,21 @@ import { Avatar, Box, Card, CardContent, CardHeader, Typography, IconButton, Pop
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 import API_URL from "../../api/apiConfig";
-import { FormatDate } from "../index/post";
+import { FormatDate } from "../index/thread";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Cookies from "js-cookie";
 
 export type CommentType = {
     ID: number;
-    PostID: number;
-    Content: string;
-    AuthorID: number;
-    AuthorName: string;
+    post_id: number;
+    content: string;
+    author_id: number;
+    author_name: string;
     CreatedTime: string;
 }
 
 interface Props {
-    index: number;
+    commentID: number;
     setStatus: (status: any) => void;
 }
 
@@ -33,12 +33,12 @@ interface PropsPopper {
 interface PropsDelete {
     setOpen: (open: boolean) => void;
     open: boolean;
-    id: number;
+    commentID: number;
     setStatus: (status: any) => void;
 }
 
 function DeleteAlert(props: PropsDelete) {
-    const { open, setOpen, id, setStatus } = props;
+    const { open, setOpen, commentID, setStatus } = props;
 
     const handleClose = () => {
         setOpen(false);
@@ -54,7 +54,7 @@ function DeleteAlert(props: PropsDelete) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                comment_id: id,
+                comment_id: commentID,
             }),
         }).catch(err => {
             console.log(err);
@@ -99,14 +99,14 @@ function CommentPopper(props: PropsPopper) {
                 <Button variant="contained" color="error" size='small' onClick={() => setDeleteAlert(true)}>
                     Delete
                 </Button>
-                <DeleteAlert open={deleteAlert} setOpen={setDeleteAlert} id={commentID} setStatus={setStatus} />
+                <DeleteAlert open={deleteAlert} setOpen={setDeleteAlert} commentID={commentID} setStatus={setStatus} />
             </div>
         </Popover>
     );
 }
 
 function Comment(props: Props) {
-    const { index, setStatus } = props;
+    const { commentID, setStatus } = props;
     const userId = Cookies.get("userId");
     const userID: number | undefined = parseInt(userId ? userId : "-1", 10);
 
@@ -124,9 +124,10 @@ function Comment(props: Props) {
         setAnchorEl(null);
     };
 
+    // handle the click event for the edit comment button
     const handleSubmit = () => {
         setEdit(false);
-        fetch(`${API_URL}comment/${index}`, {
+        fetch(`${API_URL}comment/${commentID}`, {
             method: "PUT",
             credentials: "include",
             headers: {
@@ -141,7 +142,7 @@ function Comment(props: Props) {
     }
 
     useEffect(() => {
-        fetch(`${API_URL}comment/${index}`, {
+        fetch(`${API_URL}comment/${commentID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -150,13 +151,13 @@ function Comment(props: Props) {
             if (response.ok) {
                 response.json().then(data => {
                     setComment(data.value);
-                    setContent(data.value.Content);
+                    setContent(data.value.content);
                 });
             }
         }).catch(err => {
             console.log(err);
         })
-    }, [index]);
+    }, [commentID]);
 
     return (
         <>
@@ -167,16 +168,16 @@ function Comment(props: Props) {
                     <Icon icon="oi:person" />
                 </Avatar>
                 }
-                title={comment?.AuthorName}
+                title={comment?.author_name}
                 subheader={FormatDate(comment?.CreatedTime.substring(0, 10) || "")}
                 action={
-                    (userID === comment?.AuthorID && userID !== undefined) &&
+                    (userID === comment?.author_id && userID !== undefined) &&
                     (<IconButton aria-label="settings" onClick={handleClick}>
                       <MoreVertIcon />
                     </IconButton>)
                 }
             />
-            <CommentPopper handleClose={handleClose} anchorEl={anchorEl} setEdit={setEdit} commentID={index} setStatus={setStatus} />
+            <CommentPopper handleClose={handleClose} anchorEl={anchorEl} setEdit={setEdit} commentID={commentID} setStatus={setStatus} />
             <Box sx={{ display: 'flex', flexDirection: 'column', width: "100%" }} className="card-content">
                 <CardContent sx={{ flex: '1 0 auto' }}>
                 { (edit)

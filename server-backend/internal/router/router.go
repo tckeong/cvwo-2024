@@ -10,6 +10,7 @@ import (
 	"os"
 )
 
+// Server is a struct that contains a pointer to a gin.Engine.
 type Server struct {
 	router *gin.Engine
 }
@@ -38,6 +39,8 @@ func InitServer() *Server {
 func (s *Server) initConfig() {
 	router := s.router
 
+	// CORS configuration
+	// allow the frontend to access the backend
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{os.Getenv("FRONTEND_URL")},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
@@ -45,15 +48,16 @@ func (s *Server) initConfig() {
 		AllowCredentials: true,
 	}))
 
+	// default path of the API
 	defaultPath := "/api/"
 
 	// GET METHODS
 	router.GET(defaultPath+"all", handlers.GetAllThreadHandler)
 	router.GET(defaultPath+"thread/:thread_id", handlers.GetThreadHandler)
-	router.GET(defaultPath+"comments/:thread_id", handlers.GetAllCommentHandler)
-	router.GET(defaultPath+"comment/:comment_id", handlers.GetCommentHandler)
+	router.GET(defaultPath+"comments/:thread_id", handlers.GetAllCommentsHandler)
+	router.GET(defaultPath+"comment/:comment_id", handlers.GetCommentsHandler)
 	router.GET(defaultPath+"user", middlewares.AuthCheck, handlers.GetThreadsByUserHandler)
-	router.GET(defaultPath+"like/:user_id", handlers.GetUserLikeHandler)
+	router.GET(defaultPath+"like", middlewares.AuthCheck, handlers.GetLikeByUserHandler)
 
 	// POST METHODS
 	router.POST(defaultPath+"login", handlers.LoginHandler)
@@ -81,6 +85,8 @@ func (s *Server) Run() {
 			fmt.Println("Server is shutting down...")
 		}
 	}()
+
+	fmt.Println("Server is running...")
 
 	if err := s.router.Run(port); err != nil {
 		panic(err)

@@ -9,13 +9,12 @@ import (
 	"strconv"
 )
 
-// GetAllCommentHandler handles the POST request to /comment.
-func GetAllCommentHandler(c *gin.Context) {
+// GetAllCommentsHandler handles the POST request to /comment:thread_id.
+// It returns all the comments of a thread
+func GetAllCommentsHandler(c *gin.Context) {
 	threadID, err := strconv.ParseUint(c.Param("thread_id"), 10, 64)
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -23,9 +22,7 @@ func GetAllCommentHandler(c *gin.Context) {
 
 	comments, err := repository.GetCommentsIDByPostID(uint(threadID))
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return

@@ -1,8 +1,8 @@
 import Index from "./pages/index";
 import NotFound from "./pages/notFound";
-import PostPage from "./pages/postPage";
-import AddPost from "./pages/addPost";
-import MyPosts from "./pages/myPosts";
+import ThreadPage from "./pages/threadPage";
+import AddThread from "./pages/addThread";
+import MyThreads from "./pages/myThreads";
 import EditPage from "./pages/editPage";
 import Login from "./pages/login";
 import SignUp from "./pages/signup";
@@ -46,10 +46,10 @@ function App() {
         <Routes>
           <Route path="/" Component={Index} />
           <Route path="*" Component={NotFound} />
-          <Route path="/post/:postId" Component={PostPage} />
-          <Route path="/addPost" Component={AddPost} />
-          <Route path="/myPosts" Component={MyPosts} />
-          <Route path="/edit/:postId" Component={EditPage} />
+          <Route path="/thread/:thread_id" Component={ThreadPage} />
+          <Route path="/addThread" Component={AddThread} />
+          <Route path="/myThreads" Component={MyThreads} />
+          <Route path="/edit/:thread_id" Component={EditPage} />
           <Route path="/login" Component={Login} />
           <Route path="/signup" Component={SignUp} />
           <Route path="/search" Component={SearchPage} />

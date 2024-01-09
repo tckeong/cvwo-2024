@@ -2,24 +2,25 @@ import { Box, Typography, Card, CardHeader, Avatar, List, CardActionArea, CardCo
 import { Icon } from '@iconify/react';
 import { useEffect, useState } from "react";
 import API_URL from "../../api/apiConfig";
-import { PostType } from "../index/post";
+import { ThreadType } from "../index/thread";
 import { useNavigate } from "react-router-dom";
 
 interface PropsRecommendPost {
-    index: number;
+    threadID: number;
 }
 
 interface Props {
     tags: string;
+    curThreadID: number;
 }
 
 function RecommendPost(props: PropsRecommendPost) {
-    const { index } = props;
-    const [post, setPost] = useState<PostType | undefined>(undefined);
+    const { threadID } = props;
+    const [post, setPost] = useState<ThreadType | undefined>(undefined);
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`${API_URL}thread/${index}`, {
+        fetch(`${API_URL}thread/${threadID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -33,10 +34,10 @@ function RecommendPost(props: PropsRecommendPost) {
         }).catch(err => {
             console.log(err);
         })
-    }, [index]);
+    }, [threadID]);
 
     const handleClick = () => {
-        navigate(`/post/${index}`);
+        navigate(`/post/${threadID}`);
     }
 
     return (
@@ -52,7 +53,7 @@ function RecommendPost(props: PropsRecommendPost) {
                         <Icon icon="oi:person" />
                     </Avatar>
                     }
-                    title={post?.authorName}
+                    title={post?.author_name}
                     sx={{padding: "0.5rem", paddingBottom: "0px", paddingLeft: "0.7rem", alignSelf: "center", justifySelf: "center"}}
                 />
                 <CardContent sx={{display: "flex", alignContent: "center", justifyContent: "center", flexDirection: "column"}}>
@@ -71,7 +72,7 @@ function RecommendPost(props: PropsRecommendPost) {
 }
 
 function RecommendBar(props: Props) {
-    const { tags } = props;
+    const { tags, curThreadID } = props;
     const [posts, setPosts] = useState<number[]>([]);
 
     useEffect(() => {
@@ -96,12 +97,12 @@ function RecommendBar(props: Props) {
             <Typography variant="h6" sx={{fontWeight: "bold", mb: "0.5rem", alignSelf: "center", mt: "1rem"}}>Guess you like</Typography>
             <List component="div" aria-label="recommend-post-list" sx={{height: "100%", width: "100%", overflowY: "scroll"}}>
                 {
-                    (posts.length === 0) 
+                    (posts.filter(index => index !== curThreadID).length === 0) 
                     ?( <Typography variant="h5" component="div" sx={{fontWeight: "bold", alignSelf: "center", margin: "2rem", marginLeft: "3rem"}}>
                             no posts found
                         </Typography>)
                     : posts.map((index) => {
-                        return <RecommendPost key={index} index={index} />
+                        return <RecommendPost key={index} threadID={index} />
                     })
                 }
             </List>

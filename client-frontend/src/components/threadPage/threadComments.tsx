@@ -6,16 +6,16 @@ import { useEffect, useState } from "react";
 import API_URL from "../../api/apiConfig";
 
 interface Props {
-    postID: number;
+    threadID: number;
 }
 
-function PostComment(props: Props) {
-    const { postID } = props;
+function ThreadComments(props: Props) {
+    const { threadID } = props;
     const [commentsID, setCommentsID] = useState<number[]>([]);
     const [status, setStatus] = useState<boolean>(true);
 
     useEffect(() => {
-        fetch(`${API_URL}comments/${postID}`, {
+        fetch(`${API_URL}comments/${threadID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -31,17 +31,17 @@ function PostComment(props: Props) {
                 });
             }
         }).catch(err => console.log(err));
-    }, [postID, status]);
+    }, [threadID, status]);
 
     return (
         <Box className="post-comment" sx={{margin: "2rem"}} >
-            <AddComment postID={postID} setStatus={setStatus} />
+            <AddComment threadID={threadID} setStatus={setStatus} />
             <Divider sx={{marginTop: "1.5rem"}}>All Comments</Divider>
             {commentsID.map((comment_id) => (
-                <Comment key={comment_id} index={comment_id} setStatus={setStatus} />
+                <Comment key={comment_id} commentID={comment_id} setStatus={setStatus} />
             ))}
         </Box>
     );
 }
 
-export default PostComment;
+export default ThreadComments;

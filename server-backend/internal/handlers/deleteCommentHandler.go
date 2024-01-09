@@ -15,9 +15,7 @@ func DeleteCommentHandler(c *gin.Context) {
 		CommentID uint `json:"comment_id"`
 	}
 
-	if err := c.Bind(&body); err != nil {
-		errorLog.LogError(err)
-
+	if err := c.Bind(&body); errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -25,9 +23,7 @@ func DeleteCommentHandler(c *gin.Context) {
 
 	err := repository.DeleteCommentByID(body.CommentID)
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return

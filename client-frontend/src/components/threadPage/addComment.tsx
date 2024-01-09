@@ -7,18 +7,19 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 interface Props {
-    postID: number;
+    threadID: number;
     setStatus: (status: any) => void;
 }
 
 function AddComment(props: Props) {
-    const { postID, setStatus } = props;
+    const { threadID, setStatus } = props;
     const [comment, setComment] = useState<string>("");
 
     const navigate = useNavigate();
 
     const loginState = Cookies.get("Authorization") !== undefined;
 
+    // handle the click event for the add comment button
     const handleClick = () => {
         if(!loginState) {
             alert("Please login first!");
@@ -35,7 +36,7 @@ function AddComment(props: Props) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                "thread_id": postID,
+                "thread_id": threadID,
                 "content": comment,
             }),
         }).then(response => {

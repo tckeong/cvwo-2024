@@ -12,11 +12,10 @@ import (
 // UpdateCommentHandler handles the PUT request to /comment/:comment_id.
 // request body: { content }
 func UpdateCommentHandler(c *gin.Context) {
+	// get the comment id from request url
 	commentID, err := strconv.ParseUint(c.Param("comment_id"), 10, 64)
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -26,9 +25,7 @@ func UpdateCommentHandler(c *gin.Context) {
 		Content string `json:"content"`
 	}
 
-	if err := c.Bind(&body); err != nil {
-		errorLog.LogError(err)
-
+	if err := c.Bind(&body); errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -36,9 +33,7 @@ func UpdateCommentHandler(c *gin.Context) {
 
 	err = repository.UpdateCommentByID(uint(commentID), body.Content)
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return

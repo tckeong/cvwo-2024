@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 import Header from "../components/layout/header";
 import SideBar from "../components/layout/sideBar";
-import AddPostButton from "../components/layout/addPostButton";
+import AddPostButton from "../components/layout/addThreadButton";
 import { ReactNode } from 'react';
 import HomeIcon from '@mui/icons-material/Home';
 
@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 interface Props {
     children: ReactNode;
     sideBarIndex?: number;
-    serachBar?: string;
+    searchBar?: string;
 }
 
 function Layout(props: Props) {

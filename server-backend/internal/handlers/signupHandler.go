@@ -18,9 +18,7 @@ func SignUpHandler(c *gin.Context) {
 		Password string `json:"password" binding:"required"`
 	}
 
-	if err := c.Bind(&body); err != nil {
-		errorLog.LogError(err)
-
+	if err := c.Bind(&body); errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 
 		return
@@ -29,9 +27,7 @@ func SignUpHandler(c *gin.Context) {
 	// hash the password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusInternalServerError, messages.ReturnMessage("Failed to hash password", err, nil))
 
 		return
@@ -40,9 +36,7 @@ func SignUpHandler(c *gin.Context) {
 	// create a new user
 	err = repository.CreateUser(body.Username, string(hashedPassword))
 
-	if err != nil {
-		errorLog.LogError(err)
-
+	if errorLog.ErrorHandler(err) != nil {
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Failed to create user", err, nil))
 
 		return
