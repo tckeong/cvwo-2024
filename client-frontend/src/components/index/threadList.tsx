@@ -2,7 +2,7 @@ import Post from './thread';
 import { Box, Typography } from "@mui/material";
 import List from '@mui/material/List';
 import { useNavigate } from 'react-router-dom';
-import SortedType from './sortedType';
+// import SortedType from './sortedType';
 import { useEffect, useState } from 'react';
 import API_URL from '../../api/apiConfig';
 import Cookies from 'js-cookie';

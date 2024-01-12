@@ -7,7 +7,8 @@ import (
 
 // InitConfigs is a function that initializes all the configurations.
 func InitConfigs() {
-	LoadEnvVariables()
+	// relative path to the go.mod file
+	LoadEnvVariables("./cmd/server/.env")
 	configs.ConnectToDB()
 	configs.SyncDatabase()
 	errorLog.LoggerInit()

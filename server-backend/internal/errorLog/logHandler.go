@@ -11,7 +11,8 @@ var (
 
 // LoggerInit is a public method that initializes the logger.
 func LoggerInit() {
-	filePath := "./log/error.log"
+	// relative path to go.mod
+	filePath := "./cmd/server/log/error.log"
 
 	file, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 

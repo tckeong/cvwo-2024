@@ -39,7 +39,7 @@ function UserButtonPopper(props: PropsPopper) {
                 <Button variant="contained" color="error" size='small' onClick={handleLogout}>
                     Logout
                 </Button>
-                <Button variant="outlined" onClick={() => navigate("/myPosts")} size='small'>
+                <Button variant="outlined" onClick={() => navigate("/myThreads")} size='small'>
                     My Posts
                 </Button>
             </div>

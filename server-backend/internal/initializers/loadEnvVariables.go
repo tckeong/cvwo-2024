@@ -6,8 +6,8 @@ import (
 )
 
 // LoadEnvVariables is a public method that loads the environment variables from the .env file.
-func LoadEnvVariables() {
-	err := godotenv.Load()
+func LoadEnvVariables(filePath string) {
+	err := godotenv.Load(filePath)
 
 	if err != nil {
 

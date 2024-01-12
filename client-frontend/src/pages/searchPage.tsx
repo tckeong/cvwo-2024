@@ -1,7 +1,7 @@
 import { Box, List, Typography } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import Post from "../components/index/thread";
-import SortedType from "../components/index/sortedType";
+// import SortedType from "../components/index/sortedType";
 import Layout from "./layout";
 import { useEffect, useState } from "react";
 import API_URL from "../api/apiConfig";
@@ -60,7 +60,7 @@ function SearchPage() {
                             </Typography>)
                         : result.map((index) => {
                             return <Post key={index} index={index}
-                                    handleClick={(index) => navigate("/post/" + index)} liked={likes.find(id => id === index) === index} />
+                                    handleClick={(index) => navigate("/thread/" + index)} liked={likes.find(id => id === index) === index} />
                         })
                     }
                 </List>

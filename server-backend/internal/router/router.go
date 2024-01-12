@@ -2,12 +2,13 @@ package router
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/tckeong/cvwo-2024/internal/handlers"
 	"github.com/tckeong/cvwo-2024/internal/initializers"
 	"github.com/tckeong/cvwo-2024/internal/middlewares"
-	"os"
 )
 
 // Server is a struct that contains a pointer to a gin.Engine.
@@ -56,7 +57,7 @@ func (s *Server) initConfig() {
 	router.GET(defaultPath+"thread/:thread_id", handlers.GetThreadHandler)
 	router.GET(defaultPath+"comments/:thread_id", handlers.GetAllCommentsHandler)
 	router.GET(defaultPath+"comment/:comment_id", handlers.GetCommentsHandler)
-	router.GET(defaultPath+"user", middlewares.AuthCheck, handlers.GetThreadsByUserHandler)
+	router.GET(defaultPath+"user_thread", middlewares.AuthCheck, handlers.GetThreadsByUserHandler)
 	router.GET(defaultPath+"like", middlewares.AuthCheck, handlers.GetLikeByUserHandler)
 
 	// POST METHODS

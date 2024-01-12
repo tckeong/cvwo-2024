@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:alpine
+    environment:
+      POSTGRES_DB: cvwo24
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    networks:
+      - localNetwork
+    ports:
+      - 5432:5432
+
+  backend:
+    build: ./server-backend
+    networks:
+      - localNetwork
+    ports:
+      - 8000:8000
+    depends_on:
+      - "database"
+    # setup the environment variables here if using docker container
+    # environment:
+    #   PORT: 
+    #   DSN: 
+    #   SECRET_KEY:
+    #   FRONTEND_URL:
+
+  frontend:
+    build: ./client-frontend
+    networks:
+      - localNetwork
+    ports:
+      - 5173:5173
+    depends_on:
+      - "backend"
+    # setup the environment variables here if using docker container
+    # environment:
+    #  VITE_REACT_APP_API_URL:
+    #  VITE_REACT_APP_URL: 
+
+networks:
+  localNetwork:

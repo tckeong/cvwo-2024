@@ -124,7 +124,7 @@ function EditThread(props: Props) {
                 response.json().then(data => {
                     setTitleState(data.value.title);
                     setContentState(data.value.content);
-                    setImgLinkState(data.value.imgLink);
+                    setImgLinkState(data.value.img_link);
                     setTags(data.value.tags.split(","));
                 });
             }
