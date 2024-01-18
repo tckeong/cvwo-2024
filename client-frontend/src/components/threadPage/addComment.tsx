@@ -29,7 +29,7 @@ function AddComment(props: Props) {
         
         if(comment.length === 0 || comment === "") return ; 
 
-        fetch(`${API_URL}comment`, {
+        fetch(`${API_URL}comment/${Cookies.get("Authorization")}`, {
             method: "POST",
             credentials: "include",
             headers: {
@@ -39,12 +39,6 @@ function AddComment(props: Props) {
                 "thread_id": threadID,
                 "content": comment,
             }),
-        }).then(response => {
-            if (response.ok) {
-                response.json().then(data => {
-                    console.log(data);
-                });
-            }
         }).catch(err => {
             console.log(err);
         })

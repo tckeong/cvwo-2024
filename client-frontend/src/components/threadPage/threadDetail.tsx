@@ -55,7 +55,7 @@ interface ThreadDetailProps {
     liked: boolean;
 }
 
-function PostDetail(props: ThreadDetailProps) {
+function ThreadDetail(props: ThreadDetailProps) {
     const { thread, liked } = props;
     const [checked, setChecked] = useState<boolean>(liked);
     const dispatch = useDispatch();
@@ -89,12 +89,12 @@ function PostDetail(props: ThreadDetailProps) {
                 title={thread?.author_name}
                 subheader={FormatDate(thread ? thread.CreatedAt : "")}
             />
-            <ThreadContent img={thread?.img_link} content={{title: thread?.title, content: thread?.content}}/>
+            <ThreadContent img={thread?.img_link} content={{title: thread?.title, content: thread ? thread.content : ""}}/>
             <Box sx={{display: "flex", flexDirection: "row"}}>
-                {thread?.tags.split(",").map((tag) => {
+                {thread?.tags.split(",").filter(tag => tag !== "").map((tag) => {
                     return (
-                    <Link onClick={() => navigate(`/search/?keywords=${tag}`)} underline='hover' sx={{color: "#000000"}} >
-                        <Typography key={tag} variant="subtitle1" color="text.secondary" component="div" sx={{paddingLeft: "1.5rem"}}>
+                    <Link key={tag} onClick={() => navigate(`/search/?keywords=${tag}`)} underline='hover' sx={{color: "#000000"}} >
+                        <Typography variant="subtitle1" color="text.secondary" component="div" sx={{paddingLeft: "1.5rem"}}>
                             #{tag}
                         </Typography>
                     </Link>);
@@ -108,4 +108,4 @@ function PostDetail(props: ThreadDetailProps) {
     );
 }
 
-export default PostDetail;
+export default ThreadDetail;

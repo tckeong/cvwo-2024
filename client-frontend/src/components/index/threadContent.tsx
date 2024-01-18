@@ -6,7 +6,7 @@ import "../css/postContent.css"
 
 type contentProps = {
     title?: string;
-    content?: string;
+    content: string;
 }
 
 export interface Props {
@@ -33,7 +33,10 @@ function ThreadContent(props: Props) {
                     {content.title}
                 </Typography>
                 <Typography variant="subtitle1" color="text.secondary" component="div" paragraph={true} noWrap={false}>
-                    {content.content}
+                    {content.content.length > 260
+                        ? content.content.substring(0, 255) + " ..."
+                        : content.content
+                    }
                 </Typography>
                 </CardContent>
             </Box>

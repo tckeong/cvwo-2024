@@ -32,8 +32,8 @@ function SideBar(props: Props) {
       sx={{backgroundColor: "#f1f1f1", height: '100%', width: '100%', margin: "0px", padding: "0px", overflowY: "scroll"}}
       className="sideBar"
     >
-        <nav aria-label="side-bar">
-        <List sx={{margin: "0px", padding: "0px"}}>
+        <nav aria-label="side-bar" style={{width: "100%"}}>
+        <List sx={{margin: "0px", padding: "0px", width: "100%"}} >
           {Tags.map((tag, index) => (
             <RenderSideRows
               key={index}

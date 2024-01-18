@@ -6,15 +6,15 @@ import (
 )
 
 // GetAllThreads is a function that returns all the threads in the database.
-func GetAllThreads() (*[]models.Thread, error) {
-	threads := new([]models.Thread)
+func GetAllThreads() (*models.Threads, error) {
+	threads := new(models.Threads)
 	err := configs.DB.Find(threads).Error
 	return threads, err
 }
 
 // GetAllThreadsID is a function that returns all the threads' ID in the database.
 // It call GetAllThreads() and then extract the ID from the threads.
-func GetAllThreadsID() ([]uint, error) {
+func GetAllThreadsID() ([][]uint, error) {
 	Threads, err := GetAllThreads()
 
 	if err != nil {
@@ -25,13 +25,22 @@ func GetAllThreadsID() ([]uint, error) {
 	// threads []models.Thread
 	threads := *Threads
 
-	threadsID := make([]uint, len(threads))
+	threadsByDateID := make([]uint, len(threads))
+	threadsByLikeID := make([]uint, len(threads))
+
+	threads.SortByDate()
 
 	for i := 0; i < len(threads); i++ {
-		threadsID[i] = threads[i].ID
+		threadsByDateID[i] = threads[i].ID
 	}
 
-	return threadsID, nil
+	threads.SortByLike()
+
+	for i := 0; i < len(threads); i++ {
+		threadsByLikeID[i] = threads[i].ID
+	}
+
+	return [][]uint{threadsByDateID, threadsByLikeID}, nil
 }
 
 // GetThreadByID is a function that returns a thread with the given ID.
@@ -42,8 +51,8 @@ func GetThreadByID(id uint) (*models.Thread, error) {
 }
 
 // GetThreadsByAuthorID is a function that returns all the threads with the given author ID.
-func GetThreadsByAuthorID(authorID uint) (*[]models.Thread, error) {
-	threads := new([]models.Thread)
+func GetThreadsByAuthorID(authorID uint) (*models.Threads, error) {
+	threads := new(models.Threads)
 	err := configs.DB.Where("author_id = ?", authorID).Find(threads).Error
 	return threads, err
 }
@@ -61,6 +70,8 @@ func GetThreadsIDByAuthorID(authorID uint) ([]uint, error) {
 	// threads []models.Thread
 	threads := *Threads
 
+	threads.SortByDate()
+
 	threadsID := make([]uint, len(threads))
 
 	for i := 0; i < len(threads); i++ {
@@ -71,28 +82,29 @@ func GetThreadsIDByAuthorID(authorID uint) ([]uint, error) {
 }
 
 // GetThreadsByKeywords is a function that returns all the threads with the given keywords.
-func GetThreadsByKeywords(keywords *[]string) (*[]models.Thread, error) {
+func GetThreadsByKeywords(keywords *[]string) (*models.Threads, error) {
 	keywordArray := *keywords
 	query := ""
 
 	for i := 0; i < len(keywordArray); i++ {
 		query += "LOWER(title) LIKE LOWER('%" + keywordArray[i] + "%')" + " OR " +
 			"LOWER(tags) LIKE LOWER('%" + keywordArray[i] + "%')" + " OR " +
-			"LOWER(content) LIKE LOWER('%" + keywordArray[i] + "%')"
+			"LOWER(content) LIKE LOWER('%" + keywordArray[i] + "%')" + " OR " +
+			"LOWER(author_name) LIKE LOWER('%" + keywordArray[i] + "%')"
 
 		if i != len(keywordArray)-1 {
 			query += " OR "
 		}
 	}
 
-	threads := new([]models.Thread)
+	threads := new(models.Threads)
 	err := configs.DB.Where(query).Find(threads).Error
 	return threads, err
 }
 
 // GetThreadsIDByKeywords is a function that returns all the threads' ID with the given keywords.
 // It calls GetThreadsByKeywords() and then extract the ID from the threads.
-func GetThreadsIDByKeywords(keywords *[]string) ([]uint, error) {
+func GetThreadsIDByKeywords(keywords *[]string) ([][]uint, error) {
 	Threads, err := GetThreadsByKeywords(keywords)
 
 	if err != nil {
@@ -103,13 +115,22 @@ func GetThreadsIDByKeywords(keywords *[]string) ([]uint, error) {
 	// threads []models.Thread
 	threads := *Threads
 
-	threadsID := make([]uint, len(threads))
+	threadsByDateID := make([]uint, len(threads))
+	threadsByLikeID := make([]uint, len(threads))
+
+	threads.SortByDate()
 
 	for i := 0; i < len(threads); i++ {
-		threadsID[i] = threads[i].ID
+		threadsByDateID[i] = threads[i].ID
 	}
 
-	return threadsID, nil
+	threads.SortByLike()
+
+	for i := 0; i < len(threads); i++ {
+		threadsByLikeID[i] = threads[i].ID
+	}
+
+	return [][]uint{threadsByDateID, threadsByLikeID}, nil
 }
 
 // CreateThread is a function that creates a thread with the given parameters.
@@ -158,18 +179,18 @@ func UpdateThreadLikeBy(threadID uint, userID uint, delete bool) error {
 		}
 	} else {
 		// Check if the user has already liked the thread.
-		flag := true
+		hasLiked := false
 
 		for i := range thread.LikedBy {
 			// If the user has already liked the thread, skip it.
 			if thread.LikedBy[i] == userID {
-				flag = false
+				hasLiked = true
 				break
 			}
 		}
 
 		// If the user has not liked the thread, append the user to the likedBy.
-		if flag {
+		if !hasLiked {
 			newLikedBy = append(thread.LikedBy, userID)
 		}
 	}

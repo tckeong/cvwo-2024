@@ -1,4 +1,4 @@
-import logo from "../resources/logo/logo.jpg";
+import logo from "../resources/logo/logo.png";
 import { Box, Typography, Link } from "@mui/material";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -32,14 +32,15 @@ function Login() {
               res.json().then(data => {
                 // Display a success message
                 alert(data.message);
-          
+        
                 // Set session cookies using the response data
-                Cookies.set("Authorization", data.value.token);
-                Cookies.set("username", data.value.username);
-                Cookies.set("userId", data.value.id);
-          
-                // Navigate to the home page
-                navigate("/");
+                Cookies.set("Authorization", data.value.token, {sameSite: "none", secure: true});
+                Cookies.set("username", data.value.username, {sameSite: "none", secure: true});
+                Cookies.set("userId", data.value.id, {sameSite: "none", secure: true});
+
+                setTimeout(() => {
+                  navigate("/");
+                }, 500);
               });
             } else {
               // If the response is not successful, handle the error

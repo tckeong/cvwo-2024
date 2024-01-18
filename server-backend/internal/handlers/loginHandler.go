@@ -4,6 +4,8 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/tckeong/cvwo-2024/internal/errorLog"
 	"github.com/tckeong/cvwo-2024/internal/handlers/messages"
+	"github.com/tckeong/cvwo-2024/internal/middlewares"
+	"github.com/tckeong/cvwo-2024/internal/models"
 	"github.com/tckeong/cvwo-2024/internal/repository"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
@@ -19,16 +21,8 @@ const TokenPeriod = time.Hour * 24
 // request body: { username, password }
 func LoginHandler(c *gin.Context) {
 	// get the username and password from the request body
-	var body struct {
-		Username string `json:"username" binding:"required"`
-		Password string `json:"password" binding:"required"`
-	}
 
-	if err := c.Bind(&body); errorLog.ErrorHandler(err) != nil {
-		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
-
-		return
-	}
+	body := c.Keys["body"].(*models.Body)
 
 	// check if the username and password is valid
 	user, err := repository.SearchUserByName(body.Username)
@@ -77,6 +71,9 @@ func LoginHandler(c *gin.Context) {
 		Username: user.Username,
 		Token:    tokenString,
 	}
+
+	// add the user to the logged-in users
+	middlewares.SetLogin(user.Username)
 
 	// set the user id and username in the session
 	c.JSON(http.StatusOK, messages.ReturnMessage("Login successful", nil, returnUser))

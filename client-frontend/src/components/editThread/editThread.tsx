@@ -5,6 +5,8 @@ import { Form, Button } from "react-bootstrap";
 import {TagsLabel} from "../tags/tags";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import LoadingContent from "../loadingContent/loadingContent";
 
 interface Props {
     threadID: string | undefined;
@@ -19,6 +21,7 @@ function EditThread(props: Props) {
     const [titleState, setTitleState] = useState<string>("");
     const [contentState, setContentState] = useState<string>("");
     const [imgLinkState, setImgLinkState] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(true);
 
     const tagsList = TagsLabel;
 
@@ -84,7 +87,7 @@ function EditThread(props: Props) {
     // handleSubmit for submit button
     // send post request to backend with the edited post content
     const handleSubmit = () => {
-        fetch(`${API_URL}thread`, {
+        fetch(`${API_URL}thread/${Cookies.get("Authorization")}`, {
             method: "PUT",
             credentials: "include",
             headers: {
@@ -95,7 +98,7 @@ function EditThread(props: Props) {
                 title: titleState,
                 content: contentState,
                 img_link: imgLinkState,
-                tags: tags.join(",")
+                tags: tags.join(","),
             }),
         }).then(response => {
             if (response.ok) {
@@ -126,6 +129,8 @@ function EditThread(props: Props) {
                     setContentState(data.value.content);
                     setImgLinkState(data.value.img_link);
                     setTags(data.value.tags.split(","));
+
+                    setTimeout(() => setLoading(false), 1500);
                 });
             }
         }).catch(err => {
@@ -134,7 +139,9 @@ function EditThread(props: Props) {
     }, [threadID]);
 
     return (
-        <div className="content" style={{overflowY: "scroll"}}>
+        (loading)
+        ? <LoadingContent />
+        : (<div className="content" style={{overflowY: "scroll"}}>
             <Typography component="div" variant="h6" sx={{padding: "1rem", paddingBottom: "0.5rem", paddingLeft: "1.5rem"}}>{pageTitle}</Typography>
             <Divider />
             <Form style={{padding: "1.5rem", paddingTop: "0.5rem"}}>
@@ -161,7 +168,7 @@ function EditThread(props: Props) {
                             value={tags}
                             onChange={handleChange}
                             input={<OutlinedInput label="Tag" />}
-                            renderValue={(selected) => selected.join(', ')}
+                            renderValue={(selected) => selected.filter(tag => tag !== "").join(', ')}
                         >
                         {tagsList.map((tag) => (
                             <MenuItem key={tag} value={tag}>
@@ -177,7 +184,7 @@ function EditThread(props: Props) {
                     </Button>
                 </Box>
             </Form>
-        </div>
+        </div>)
     );
 }
 

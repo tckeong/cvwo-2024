@@ -37,7 +37,8 @@ func SignUpHandler(c *gin.Context) {
 	err = repository.CreateUser(body.Username, string(hashedPassword))
 
 	if errorLog.ErrorHandler(err) != nil {
-		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Failed to create user", err, nil))
+		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Failed to create user, please use another username",
+			err, nil))
 
 		return
 	}

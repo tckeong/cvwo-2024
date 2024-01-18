@@ -8,6 +8,7 @@ import { Popover } from '@mui/material';
 import Cookies from "js-cookie";
 import { SubmitLikes, reset } from '../interact/likeInteract';
 import { useDispatch } from 'react-redux';
+import API_URL from '../../api/apiConfig';
 
 interface PropsPopper {
     handleClose: () => void;
@@ -25,7 +26,8 @@ function UserButtonPopper(props: PropsPopper) {
 
     const handleLogout = async () => {
         await SubmitLikes(() => dispatch(reset()));
-        
+        await fetch(`${API_URL}logout/${Cookies.get("Authorization")}`);
+
         Cookies.remove("Authorization");
         Cookies.remove("username");
         Cookies.remove("userId");

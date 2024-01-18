@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { SubmitLikes, reset } from "./components/interact/likeInteract";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
+import API_URL from "./api/apiConfig";
 
 function App() {
   const dispatch = useDispatch();
@@ -25,6 +26,10 @@ function App() {
       if(userID === undefined) return;
 
       await SubmitLikes(() => dispatch(reset()));
+      await fetch(`${API_URL}logout/${Cookies.get("Authorization")}`, 
+      {
+        credentials: "include",
+      });
 
       Cookies.remove("Authorization");
       Cookies.remove("username");

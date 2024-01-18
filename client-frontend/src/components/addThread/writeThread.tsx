@@ -60,7 +60,7 @@ function WriteThread() {
      * send post request to backend with the post content
      */
       const handleSubmit = () => {
-        fetch(`${API_URL}thread`, {
+        fetch(`${API_URL}thread/${Cookies.get("Authorization")}`, {
             method: "POST",
             credentials: "include",
             headers: {
@@ -70,14 +70,12 @@ function WriteThread() {
                 title: titleState,
                 content: contentState,
                 img_link: imgLinkState,
-                tags: tags.join(",")
+                tags: tags.join(","),
             }),
         }).then(response => {
             if (response.ok) {
-                response.json().then(_ => {
-                    alert("Post successfully created!");
-                    navigate("/");
-                });
+                alert("Post successfully created!");
+                navigate("/"); 
             } else {
                 alert("Post failed to create!");
             }
@@ -115,7 +113,7 @@ function WriteThread() {
                             value={tags}
                             onChange={handleChange}
                             input={<OutlinedInput label="Tag" />}
-                            renderValue={(selected) => selected.join(', ')}
+                            renderValue={(selected) => selected.filter(tag => tag !== "").join(', ')}
                         >
                         {tagsList.map((tag) => (
                             <MenuItem key={tag} value={tag}>

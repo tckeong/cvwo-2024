@@ -1,4 +1,4 @@
-import logo from "../../resources/logo/logo.jpg";
+import logo from "../../resources/logo/logo.png";
 import "../css/header.css";
 import { Link } from "react-router-dom";
 import TextField from '@mui/material/TextField';

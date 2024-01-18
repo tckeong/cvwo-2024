@@ -16,9 +16,9 @@ function RenderSideRows(props: Props) {
     const [ content, icon ] = tag;
 
     return (
-      <ListItem key={index} component="div" disablePadding>
+      <ListItem key={index} component="div" disablePadding sx={{width: "100%"}}>
         <ListItemButton selected={index === selectedIndex} onClick={(event) => handleClick(event, index)} >
-          <ListItemIcon>
+          <ListItemIcon sx={{width: "min-content"}}>
               {icon}
           </ListItemIcon>
           <ListItemText primary={content} />

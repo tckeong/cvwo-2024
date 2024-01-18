@@ -15,7 +15,7 @@ function ShareButton(props: Props) {
 
     const handleShare = () => {
         setOpen(true);
-        navigator.clipboard.writeText(`${url}post/${threadID}`).catch(err => console.log(err));
+        navigator.clipboard.writeText(`${url}thread/${threadID}`).catch(err => console.log(err));
     }
 
     const handleClose = (_?: React.SyntheticEvent | Event, reason?: string) => {

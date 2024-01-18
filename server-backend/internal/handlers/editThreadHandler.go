@@ -21,8 +21,7 @@ func EditThreadHandler(c *gin.Context) {
 		Tags    string `json:"tags"`
 	}
 
-	if err := c.Bind(&body); err != nil {
-		_ = errorLog.ErrorHandler(err)
+	if err := c.Bind(&body); errorLog.ErrorHandler(err) != nil {
 
 		c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
 

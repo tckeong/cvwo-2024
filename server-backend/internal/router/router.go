@@ -17,7 +17,7 @@ type Server struct {
 }
 
 func init() {
-	// gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 	initializers.InitConfigs()
 }
 
@@ -43,7 +43,7 @@ func (s *Server) initConfig() {
 	// CORS configuration
 	// allow the frontend to access the backend
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{os.Getenv("FRONTEND_URL")},
+		AllowOrigins:     []string{os.Getenv("FRONTEND_URL_1"), os.Getenv("FRONTEND_URL_2")},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type"},
 		AllowCredentials: true,
@@ -57,24 +57,25 @@ func (s *Server) initConfig() {
 	router.GET(defaultPath+"thread/:thread_id", handlers.GetThreadHandler)
 	router.GET(defaultPath+"comments/:thread_id", handlers.GetAllCommentsHandler)
 	router.GET(defaultPath+"comment/:comment_id", handlers.GetCommentsHandler)
-	router.GET(defaultPath+"user_thread", middlewares.AuthCheck, handlers.GetThreadsByUserHandler)
-	router.GET(defaultPath+"like", middlewares.AuthCheck, handlers.GetLikeByUserHandler)
+	router.GET(defaultPath+"user_thread/:token", middlewares.AuthCheck, handlers.GetThreadsByUserHandler)
+	router.GET(defaultPath+"like/:token", middlewares.AuthCheck, handlers.GetLikeByUserHandler)
+	router.GET(defaultPath+"logout/:token", middlewares.AuthCheck, middlewares.Logout)
 
 	// POST METHODS
-	router.POST(defaultPath+"login", handlers.LoginHandler)
+	router.POST(defaultPath+"login", middlewares.LoginCheck, handlers.LoginHandler)
 	router.POST(defaultPath+"signup", handlers.SignUpHandler)
-	router.POST(defaultPath+"thread", middlewares.AuthCheck, handlers.CreateThreadHandler)
-	router.POST(defaultPath+"comment", middlewares.AuthCheck, handlers.AddCommentHandler)
+	router.POST(defaultPath+"thread/:token", middlewares.AuthCheck, handlers.CreateThreadHandler)
+	router.POST(defaultPath+"comment/:token", middlewares.AuthCheck, handlers.AddCommentHandler)
 	router.POST(defaultPath+"search", handlers.SearchThreadsHandler)
 
 	// PUT METHODS
-	router.PUT(defaultPath+"thread", middlewares.AuthCheck, handlers.EditThreadHandler)
-	router.PUT(defaultPath+"like", middlewares.AuthCheck, handlers.LikeThreadsHandler)
-	router.PUT(defaultPath+"comment/:comment_id", middlewares.AuthCheck, handlers.UpdateCommentHandler)
+	router.PUT(defaultPath+"thread/:token", middlewares.AuthCheck, handlers.EditThreadHandler)
+	router.PUT(defaultPath+"like/:token", middlewares.AuthCheck, handlers.LikeThreadsHandler)
+	router.PUT(defaultPath+"comment/:token", middlewares.AuthCheck, handlers.UpdateCommentHandler)
 
 	// DELETE METHODS
-	router.DELETE(defaultPath+"thread", middlewares.AuthCheck, handlers.DeleteThreadHandler)
-	router.DELETE(defaultPath+"comment", middlewares.AuthCheck, handlers.DeleteCommentHandler)
+	router.DELETE(defaultPath+"thread/:token", middlewares.AuthCheck, handlers.DeleteThreadHandler)
+	router.DELETE(defaultPath+"comment/:token", middlewares.AuthCheck, handlers.DeleteCommentHandler)
 }
 
 // Run is a public method that runs the router.

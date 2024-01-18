@@ -6,35 +6,48 @@ import { useState } from 'react';
 import { Icon } from '@iconify/react';
 
 
-type handleClickType = "byRating" | "byDate";
+export type handleClickType = "byRating" | "byDate";
 
-function SortedType() {
+interface Props {
+  setStatus: (status: handleClickType) => void;
+  setReverse: (reverse: any) => void;
+  reverse: boolean;
+}
+
+function SortedType(props: Props) {
+  const { setStatus, setReverse, reverse } = props;
+
   const [byRating, setByRating] = useState(false);
   const [byDate, setByDate] = useState(false);
-  const [reverse , setReverse] = useState(false);
 
   function handleClick(type: handleClickType) {
     switch (type) {
       case "byRating":
         setByRating(true);
         setByDate(false);
+        setStatus("byRating");
         break;
       case "byDate":
         setByRating(false);
         setByDate(true);
+        setStatus("byDate");
         break;
       default:
         break;
     }
   }
 
+  function handleReverse() {
+    setReverse(!reverse);
+  }
+
   return (
     <Box sx={{display: "flex", flexDirection: "row"}}>
       {(reverse)
-        ?(<IconButton color="primary" aria-label='reverse' sx={{marginRight: "1rem"}} onClick={() => setReverse(!reverse)}>
+        ?(<IconButton color="primary" aria-label='reverse' sx={{marginRight: "1rem"}} onClick={handleReverse}>
             <Icon icon="system-uicons:reverse" rotate={1} />
           </IconButton>)
-        : (<IconButton aria-label="reverse" sx={{marginRight: "1rem"}} onClick={() => setReverse(!reverse)}>
+        : (<IconButton aria-label="reverse" sx={{marginRight: "1rem"}} onClick={handleReverse}>
             <Icon icon="system-uicons:reverse" rotate={1}/>
           </IconButton>
         )}

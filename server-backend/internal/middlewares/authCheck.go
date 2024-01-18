@@ -19,9 +19,15 @@ func AuthCheck(c *gin.Context) {
 
 	// if the cookie is not found, return an error
 	if errorLog.ErrorHandler(err) != nil {
-		c.AbortWithStatus(http.StatusUnauthorized)
+		tokenString = c.Param("token")
 
-		return
+		if tokenString == "" {
+			_ = errorLog.ErrorHandler(errors.New("no token found"))
+
+			c.AbortWithStatus(http.StatusUnauthorized)
+
+			return
+		}
 	}
 
 	// check if the token is valid

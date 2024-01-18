@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import API_URL from "../../api/apiConfig";
 import { ThreadType } from "../index/thread";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 interface PropsRecommendPost {
     threadID: number;
@@ -14,9 +15,9 @@ interface Props {
     curThreadID: number;
 }
 
-function RecommendPost(props: PropsRecommendPost) {
+function RecommendThread(props: PropsRecommendPost) {
     const { threadID } = props;
-    const [post, setPost] = useState<ThreadType | undefined>(undefined);
+    const [thread, setThread] = useState<ThreadType | undefined>(undefined);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,7 +29,7 @@ function RecommendPost(props: PropsRecommendPost) {
         }).then(response => {
             if (response.ok) {
                 response.json().then(data => {
-                    setPost(data.value);
+                    setThread(data.value);
                 });
             }
         }).catch(err => {
@@ -37,7 +38,7 @@ function RecommendPost(props: PropsRecommendPost) {
     }, [threadID]);
 
     const handleClick = () => {
-        navigate(`/post/${threadID}`);
+        navigate(`/thread/${threadID}`);
     }
 
     return (
@@ -53,14 +54,14 @@ function RecommendPost(props: PropsRecommendPost) {
                         <Icon icon="oi:person" />
                     </Avatar>
                     }
-                    title={post?.author_name}
+                    title={thread?.author_name}
                     sx={{padding: "0.5rem", paddingBottom: "0px", paddingLeft: "0.7rem", alignSelf: "center", justifySelf: "center"}}
                 />
                 <CardContent sx={{display: "flex", alignContent: "center", justifyContent: "center", flexDirection: "column"}}>
                     <Typography component="div" variant="h5" sx={{alignSelf: "center", justifySelf: "center", paddingBottom: "1rem"}}>
-                        {post?.title}
+                        {thread?.title}
                     </Typography>
-                    {post?.tags.split(",").map((tag) => (
+                    {thread?.tags.split(",").filter(tag => tag !== "").map((tag) => (
                         <Typography component="div" variant="subtitle2" color="text.secondary" sx={{paddingRight: "0.5rem", fontSize: "0.8rem"}}>
                             # {tag}
                         </Typography>
@@ -73,7 +74,8 @@ function RecommendPost(props: PropsRecommendPost) {
 
 function RecommendBar(props: Props) {
     const { tags, curThreadID } = props;
-    const [posts, setPosts] = useState<number[]>([]);
+    const [threads, setThreads] = useState<number[]>([]);
+    const username = Cookies.get("username");
 
     useEffect(() => {
         fetch(`${API_URL}search`, {
@@ -82,11 +84,11 @@ function RecommendBar(props: Props) {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({keywords: tags})
+            body: JSON.stringify({keywords: tags + `,${username}`})
         }).then(response => {
             if (response.ok) {
                 response.json().then(data => {
-                    setPosts(data.value);
+                    setThreads(data.value[0]);
                 });
             }
         }).catch(err => console.log(err));
@@ -97,12 +99,12 @@ function RecommendBar(props: Props) {
             <Typography variant="h6" sx={{fontWeight: "bold", mb: "0.5rem", alignSelf: "center", mt: "1rem"}}>Guess you like</Typography>
             <List component="div" aria-label="recommend-post-list" sx={{height: "100%", width: "100%", overflowY: "scroll"}}>
                 {
-                    (posts.filter(index => index !== curThreadID).length === 0) 
+                    (threads.filter(index => index !== curThreadID).length === 0) 
                     ?( <Typography variant="h5" component="div" sx={{fontWeight: "bold", alignSelf: "center", margin: "2rem", marginLeft: "3rem"}}>
                             no posts found
                         </Typography>)
-                    : posts.map((index) => {
-                        return <RecommendPost key={index} threadID={index} />
+                    : threads.filter(index => index !== curThreadID).map((index) => {
+                        return <RecommendThread key={index} threadID={index} />
                     })
                 }
             </List>

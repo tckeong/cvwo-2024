@@ -3,7 +3,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Avatar from '@mui/material/Avatar';
 import { Icon } from '@iconify/react';
 import CardActions from '@mui/material/CardActions';
-import PostContent from './threadContent';
+import ThreadContent from './threadContent';
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
@@ -109,7 +109,7 @@ function Thread(props: Props) {
                     title={thread?.author_name}
                     subheader={thread ? FormatDate(thread.CreatedAt) : ""}
                 />
-                <PostContent img={thread?.img_link} content={{title: thread?.title, content: thread?.content}} />
+                <ThreadContent img={thread?.img_link} content={{title: thread?.title, content: thread ? thread.content : ""}} />
             </CardActionArea>
             <CardActions disableSpacing >
                 <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={checked} onChange={handleLike}/>

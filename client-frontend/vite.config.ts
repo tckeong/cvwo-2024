@@ -10,6 +10,8 @@ export default defineConfig({
   server: {
     host: true,
     strictPort: true,
+    port: parseInt(process.env.PORT, 10) || 5173,
+    cors: true,
   },
 })
 

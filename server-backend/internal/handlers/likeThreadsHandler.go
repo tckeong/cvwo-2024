@@ -24,24 +24,45 @@ func LikeThreadsHandler(c *gin.Context) {
 		return
 	}
 
-	checkDeleted := func(threadID uint, likes []uint) bool {
+	updateLike := body.ThreadsID
+	deleteLike := make([]uint, 0)
+
+	// if the request body is empty, delete all the likes
+	if len(body.ThreadsID) == 0 {
+		deleteLike = user.Likes
+	} else {
+		// if the request body is not empty, update the likes if the user likes is empty
+		likes := user.Likes
+
 		for i := range likes {
-			if threadID == likes[i] {
-				return true
+			found := false
+
+			for j := range body.ThreadsID {
+				if likes[i] == body.ThreadsID[j] {
+					found = true
+
+					break
+				}
+			}
+
+			if !found {
+				deleteLike = append(deleteLike, likes[i])
 			}
 		}
-
-		return false
 	}
 
-	for i := range body.ThreadsID {
-		var err error
+	for i := range updateLike {
+		err := repository.UpdateThreadLikeBy(updateLike[i], user.ID, false)
 
-		if checkDeleted(body.ThreadsID[i], user.Likes) {
-			err = repository.UpdateThreadLikeBy(body.ThreadsID[i], user.ID, true)
-		} else {
-			err = repository.UpdateThreadLikeBy(body.ThreadsID[i], user.ID, false)
+		if errorLog.ErrorHandler(err) != nil {
+			c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))
+
+			return
 		}
+	}
+
+	for i := range deleteLike {
+		err := repository.UpdateThreadLikeBy(deleteLike[i], user.ID, true)
 
 		if errorLog.ErrorHandler(err) != nil {
 			c.JSON(http.StatusBadRequest, messages.ReturnMessage("Invalid request body", err, nil))

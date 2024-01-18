@@ -1,4 +1,4 @@
-import logo from "../resources/logo/logo.jpg";
+import logo from "../resources/logo/logo.png";
 import { Box, Typography, Link } from "@mui/material";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';

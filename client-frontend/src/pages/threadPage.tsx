@@ -11,11 +11,13 @@ import API_URL from "../api/apiConfig";
 import { ThreadType } from '../components/index/thread';
 import {useSelector } from 'react-redux';
 import { RootState } from '../components/interact/likeInteract';
+import LoadingContent from '../components/loadingContent/loadingContent';
 
 function ThreadPage() {
     const {thread_id} = useParams<string>();
     const [thread, setThread] = useState<ThreadType | undefined>(undefined);
     const [likes, setLikes] = useState<number[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const likeStore = useSelector((state: RootState) => state.like.value);
 
 
@@ -32,6 +34,8 @@ function ThreadPage() {
                 response.json().then(data => {
                     setThread(data.value);
                 });
+
+                setTimeout(() => setLoading(false), 1200);
             }
         }).catch(err => {
             console.log(err);
@@ -43,22 +47,26 @@ function ThreadPage() {
 
     return (
         <Layout>
-            <Box className="content" sx={{overflowY: "hidden", backgroundColor: "#F8F8FF"}}>
-                {(thread !== undefined)
-                ? ( <Box className="post-page-content">
-                        <Box className="post-content" sx={{overflowY: "scroll"}}>
-                            <ThreadDetail thread={thread} liked={likes.find(id => id === threadID) === threadID} />
-                            <ThreadComment threadID={threadID} />
-                        </Box>
-                        <Box className="recommend-bar" sx={{overflowY: "scroll"}}>
-                            <RecommendBar curThreadID={threadID} tags={thread.tags} />
-                        </Box>
-                    </Box>)
-                : ( <Typography variant="h4" component="div" sx={{fontWeight: "bold", alignSelf: "center", margin: "2rem", marginLeft: "3rem"}}>
-                        post does not exist
-                    </Typography>)
-                }
-            </Box>
+            {
+                (loading)
+                ? <LoadingContent />
+                : (<Box className="content" sx={{overflowY: "hidden", backgroundColor: "#F8F8FF"}}>
+                    {(thread !== undefined)
+                    ? ( <Box className="post-page-content">
+                            <Box className="post-content" sx={{overflowY: "scroll"}}>
+                                <ThreadDetail thread={thread} liked={likes.find(id => id === threadID) === threadID} />
+                                <ThreadComment threadID={threadID} />
+                            </Box>
+                            <Box className="recommend-bar" sx={{overflowY: "scroll"}}>
+                                <RecommendBar curThreadID={threadID} tags={thread.tags} />
+                            </Box>
+                        </Box>)
+                    : ( <Typography variant="h4" component="div" sx={{fontWeight: "bold", alignSelf: "center", margin: "2rem", marginLeft: "3rem"}}>
+                            post does not exist
+                        </Typography>)
+                    }
+                </Box>)
+            }
         </Layout>
     );
 }

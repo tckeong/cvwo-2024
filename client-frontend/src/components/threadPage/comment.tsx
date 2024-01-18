@@ -47,7 +47,7 @@ function DeleteAlert(props: PropsDelete) {
     const handleDelete = () => {
         setOpen(false);
 
-        fetch(`${API_URL}comment`, {
+        fetch(`${API_URL}comment/${Cookies.get("Authorization")}`, {
             method: "DELETE",
             credentials: "include",
             headers: {
@@ -127,7 +127,7 @@ function Comment(props: Props) {
     // handle the click event for the edit comment button
     const handleSubmit = () => {
         setEdit(false);
-        fetch(`${API_URL}comment/${commentID}`, {
+        fetch(`${API_URL}comment/${Cookies.get("Authorization")}`, {
             method: "PUT",
             credentials: "include",
             headers: {
@@ -135,6 +135,7 @@ function Comment(props: Props) {
             },
             body: JSON.stringify({
                 content: content,
+                comment_id: commentID,
             }),
         }).catch(err => {
             console.log(err);

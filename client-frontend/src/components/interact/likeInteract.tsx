@@ -1,5 +1,6 @@
 import { PayloadAction, configureStore, createSlice } from '@reduxjs/toolkit';
 import API_URL from '../../api/apiConfig';
+import Cookies from 'js-cookie';
 
 interface Action {
     index: number;
@@ -51,14 +52,14 @@ export const SubmitLikes = async (callback: Function) => {
 
     if(likes === undefined || likes === null) return;
 
-    await fetch(`${API_URL}like`, {
+    await fetch(`${API_URL}like/${Cookies.get("Authorization")}`, {
         method: "PUT",
         credentials: "include",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            likes: likes
+            likes: likes,
         })
     })
 
