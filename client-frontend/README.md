@@ -1,30 +1,81 @@
-# React + TypeScript + Vite
+# Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a react + vite project for the web forum client side.
 
-Currently, two official plugins are available:
+### Build with:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [TypeScript](https://www.typescriptlang.org/) - The programming language used.
+- [Vite](https://vitejs.dev/) - The Frontend Tool.
+- [React](https://react.dev/) - The Frontend Framework.
+- [MUI](https://mui.com/) - The React Component Library used.
+- [Docker](https://www.docker.com/) - The container technology used for deploy the website.
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+<br>
+<br>
+<span style="color:red"><small>_Note: You need to setup the .env file first_</small></span>
 
-- Configure the top-level `parserOptions` property like this:
+### Prerequisites
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+- Node v18.16.0 or higher **OR**
+- Docker
+
+### Installing
+
+A step by step series of examples that tell you how to get a development environment running.
+
+1. Clone the repository
+
+```bash
+git clone https://github.com/tckeong/cvwo-2024.git
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+<br>
+
+2. Navigate to the project directory
+
+```bash
+cd cvwo-2024/client-frontend
+```
+
+<br>
+
+> **If you are using Docker:**
+>
+> 1. Build the Docker image
+>
+> ```bash
+> docker build -t client-frontend .
+> ```
+>
+> 2. Run the Docker image
+>
+> ```bash
+> docker run -p 8000:8000 client-frontend
+> ```
+
+<br>
+
+3. Install all the dependencies
+
+```bash
+npm install
+```
+
+<br>
+
+4. Run the server
+
+```bash
+npm run dev
+```
+
+<br>
+
+5. Open the browser and access to http://localhost:5173 (if you did not change the port, this is the vite + react default port)
+
+<br>
+
+### You should be able to access to the frontend website now

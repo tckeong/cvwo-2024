@@ -25,8 +25,8 @@ services:
       PORT: 8000
       DATABASE_URL: "host=database user=postgres password=root dbname=cvwo24 port=5432 sslmode=disable"
       SECRET_KEY: YOUR_SECRET_KEY
-      FRONTEND_URL_1: http://localhost:3000
-      FRONTEND_URL_2: http://localhost:3000/
+      FRONTEND_URL_1: http://localhost:5173
+      FRONTEND_URL_2: http://localhost:5173/
 
   frontend:
     build: ./client-frontend
