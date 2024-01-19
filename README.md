@@ -7,6 +7,8 @@ This is a web forum project.
 
 Welcome to the Web Forum project!
 
+### This web forum alread deploy at: [https://webforum-client-9d35249bbdc9.herokuapp.com/](https://webforum-client-9d35249bbdc9.herokuapp.com/) using heroku
+
 ## Features
 
 - **User Registration and Authentication**: Users can create accounts and log in to the forum.
@@ -23,6 +25,7 @@ Welcome to the Web Forum project!
 ## Getting Started
 
 To get started with the Web Forum project, follow these steps:
+<br>
 <br>
 <span style="color:red"><small>_Note: You need to setup the .env file first **OR** setup the environment variables in docker-compose.yml file if you want to use docker to deploy the website_</small></span>
 
