@@ -30,16 +30,23 @@ To get started with the Web Forum project, follow these steps:
 <span style="color:red"><small>_Note: You need to setup the .env file first **OR** setup the environment variables in docker-compose.yml file if you want to use docker to deploy the website_</small></span>
 
 1. Clone the repository: `git clone https://github.com/tckeong/cvwo-2024.git`
+
 2. Set up the database: Create and configure your database according to the backend technology used.
+
 3. Start the website: Can setup both of the client and server according to the README.md in ./client-frontend and ./server-backend
+   
    > **If you are using Docker:**
-   >
+   > 
+   > <small>*Note: Remember to disabled the LoadEnvVariables() function in internal/initializer/initConfigs.go*</small>
+   > 
    > Just run:
-   >
+   > 
    > ```bash
    > docker-compose up --build
    > ```
+
 4. Open your web browser and navigate to `http://localhost:5173` (if you did not change the default port).
+
 5. Your should be able to see the first page of the web forum now.
 
 Feel free to modify this template to fit the specific details of your own project.

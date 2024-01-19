@@ -88,7 +88,7 @@ func (s *Server) Run() {
 		}
 	}()
 
-	fmt.Println("Server is running...")
+	fmt.Println("Server is running at PORT" + port + "...")
 
 	if err := s.router.Run(port); err != nil {
 		panic(err)

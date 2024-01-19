@@ -25,15 +25,18 @@ function App() {
       const userID = Cookies.get("userId");
       if(userID === undefined) return;
 
-      await SubmitLikes(() => dispatch(reset()));
-      await fetch(`${API_URL}logout/${Cookies.get("Authorization")}`, 
-      {
-        credentials: "include",
-      });
+      const authorization = Cookies.get("Authorization");
 
       Cookies.remove("Authorization");
       Cookies.remove("username");
       Cookies.remove("userId");
+
+
+      await SubmitLikes(() => dispatch(reset()));
+      await fetch(`${API_URL}logout/${authorization}`, 
+      {
+        credentials: "include",
+      });
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);

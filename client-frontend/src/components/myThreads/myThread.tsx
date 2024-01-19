@@ -15,6 +15,7 @@ import Cookies from "js-cookie";
 interface Props {
     threadID: number;
     liked: boolean;
+    setStatus: (status: any) => void;
 }
 
 interface PropsPopper {
@@ -29,16 +30,20 @@ interface PropsDelete {
     open: boolean;
     threadID: number;
     setStatus: (status: any) => void;
+    handlePopperClose: () => void;
 }
 
 function DeleteAlert(props: PropsDelete) {
-    const { open, setOpen, threadID, setStatus } = props;
+    const { open, setOpen, threadID, setStatus, handlePopperClose } = props;
 
     const handleClose = () => {
         setOpen(false);
     };
 
     const handleDelete = () => {
+        setOpen(false);
+        handlePopperClose();
+
         fetch(`${API_URL}thread/${Cookies.get("Authorization")}`, {
             method: "DELETE",
             credentials: "include",
@@ -48,13 +53,11 @@ function DeleteAlert(props: PropsDelete) {
             body: JSON.stringify({
                 thread_id: threadID,
             }),
-        }).then(response => {
-            if (response.ok) {
-                setStatus((prevState: any) => !prevState);
-            }
         }).catch(err => {
             console.log(err);
         })
+
+        setStatus((prevState: any) => !prevState);
     }
 
     return (
@@ -95,18 +98,17 @@ function MyThreadPopper(props: PropsPopper) {
                 <Button variant="contained" color="error" size='small' onClick={() => setDeleteAlert(true)}>
                     Delete
                 </Button>
-                <DeleteAlert open={deleteAlert} setOpen={setDeleteAlert} threadID={threadID} setStatus={setStatus} />
+                <DeleteAlert open={deleteAlert} setOpen={setDeleteAlert} threadID={threadID} setStatus={setStatus} handlePopperClose={handleClose} />
             </div>
         </Popover>
     );
 }
 
 function MyThread(props: Props) {
-    const { threadID, liked } = props;
+    const { threadID, liked, setStatus } = props;
     const [content, setContent] = useState<ThreadType | undefined>(undefined);
     const [checked, setChecked] = useState<boolean>(liked);
     const [loading, setLoading] = useState<boolean>(true);
-    const [status, setStatus] = useState<boolean>(true);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -127,7 +129,7 @@ function MyThread(props: Props) {
         }).catch(err => {
             console.log(err);
         })
-    }, [status])
+    }, [])
 
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -184,7 +186,7 @@ function MyThread(props: Props) {
                 </Box>
                 <Box sx={{display:"flex", flexDirection: "row"}}>
                 {
-                    content?.tags.split(",").map((tags) => {
+                    content?.tags.split(",").filter(tag => tag !== "").map((tags) => {
                         return (
                         <Typography key={tags} variant="subtitle1" color="text.secondary" component="div" sx={{paddingLeft: "1.5rem"}}>
                             #{tags}

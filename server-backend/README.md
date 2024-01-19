@@ -40,7 +40,10 @@ cd cvwo-2024/server-backend
 <br>
 
 > **If you are using Docker:**
+> 
+><small>*Note: Remember to disabled the LoadEnvVariables() function in internal/initializer/initConfigs.go*</small>
 >
+> Just run:
 > 1. Build the Docker image
 > ```bash
 > docker build -t server-backend .

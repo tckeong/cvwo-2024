@@ -16,6 +16,7 @@ function MyThreads() {
     const [threadID, setThreadID] = useState<number[]>([]);
     const [likes, setLikes] = useState<number[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [status, setStatus] = useState<boolean>(false);
     const likeStore = useSelector((state: RootState) => state.like.value);
 
     useEffect(() => {
@@ -40,7 +41,7 @@ function MyThreads() {
 
         setLikes(likeStore);
 
-    }, [userID]);
+    }, [userID, status]);
 
     return (
         <Layout>
@@ -57,7 +58,7 @@ function MyThreads() {
                                     no posts found
                                 </Typography>)
                             : threadID.map((index) => {
-                                return <MyThread key={index} threadID={index} liked={likes.find(id => id === index) === index} />
+                                return <MyThread key={index} threadID={index} liked={likes.find(id => id === index) === index} setStatus={setStatus}/>
                             })
                         }
                     </Box>
