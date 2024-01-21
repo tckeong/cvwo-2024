@@ -39,10 +39,10 @@ function ThreadList() {
 
         /**
          * fetch the likes data from the server
-         * if the user is logged in and the likeStore is empty
+         * if the user is logged in and the likeStore[0] === -1 (means the likeStore is first initialized)
          * and set the like to the redux store
          */
-        if(userID !== undefined && likeStore.length === 0) {           
+        if(userID !== undefined && likeStore[0] === -1) {           
             fetch(`${API_URL}like/${Cookies.get("Authorization")}`, {
                 method: "GET",
                 credentials: "include",

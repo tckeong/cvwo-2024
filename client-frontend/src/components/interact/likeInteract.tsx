@@ -12,7 +12,7 @@ interface LikeState {
 
 
 const initialState: LikeState = {
-    value: []
+    value: [-1]
 };
 
 const LikeSlice = createSlice({
