@@ -53,7 +53,7 @@ cd cvwo-2024/client-frontend
 > 2. Run the Docker image
 >
 > ```bash
-> docker run -p 8000:8000 client-frontend
+> docker run -p 5173:5173 client-frontend
 > ```
 
 <br>
