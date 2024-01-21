@@ -42,7 +42,7 @@ function UserButtonPopper(props: PropsPopper) {
                     Logout
                 </Button>
                 <Button variant="outlined" onClick={() => navigate("/myThreads")} size='small'>
-                    My Posts
+                    My Threads
                 </Button>
             </div>
         </Popover>

@@ -7,7 +7,7 @@ This is a web forum project.
 
 Welcome to the Web Forum project!
 
-### This web forum alread deploy at: [https://webforum-client-9d35249bbdc9.herokuapp.com/](https://webforum-client-9d35249bbdc9.herokuapp.com/) using heroku
+### This web forum already deploy at: [https://webforum-client-9d35249bbdc9.herokuapp.com/](https://webforum-client-9d35249bbdc9.herokuapp.com/) using heroku
 
 ## Features
 

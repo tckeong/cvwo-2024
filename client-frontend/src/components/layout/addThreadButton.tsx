@@ -11,7 +11,7 @@ function AddThreadButton() {
     return (
         <div className="addPosts" style={{display: "flex", justifyContent: "center", alignContent: "center", width: "100%", height: "100%", padding: "1rem"}}>
             <Button sx={{margin: "0px", justifySelf: "center", alignSelf: "center", width: "auto", height: "auto"}} variant="contained" startIcon={<AddIcon />} onClick={handleClick}>
-                Add Posts
+                Add Threads
             </Button>
         </div>
     )
