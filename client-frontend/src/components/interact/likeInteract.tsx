@@ -22,10 +22,12 @@ const LikeSlice = createSlice({
         like: (state, action: PayloadAction<Action>) => {
             if (state.value.find(id => id === action.payload.index) !== undefined) return;
 
+            if (state.value[0] === -1) state.value = [];
+            
             state.value.push(action.payload.index);
             localStorage.setItem("likes", JSON.stringify(state.value));
         },
-        unlike: (state, action: PayloadAction<Action>) => {
+        unlike: (state, action: PayloadAction<Action>) => {            
             state.value = state.value.filter(id => id !== action.payload.index);
             localStorage.setItem("likes", JSON.stringify(state.value));
         },
